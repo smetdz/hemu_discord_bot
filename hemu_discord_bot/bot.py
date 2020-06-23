@@ -3,24 +3,38 @@ from pathlib import Path
 import discord
 from discord.ext import commands
 
+import config
 from utils import create_greeting
 
 
 class HemuBot(commands.Bot):
     async def on_message(self, message):
-        print(message.content)
+        print(message.content, message.author.roles)
         if message.author == self.user:
             return
 
-        if message.content == '!testg':
-            chanel = list(filter(lambda ch: ch.name == '✋приветствие', message.guild.text_channels))[0]
-            guild = message.guild
+        key_words = {}
 
-            emb_greeting = create_greeting(message.author, guild)
+        if message.author.top_role.id == config.MODER_ROLE:
+            test_commands = {
+                '!testg': self.on_member_join,
+                '!testr': self.on_member_remove,
+            }
 
-            await chanel.send(embed=emb_greeting)
-        else:
+            key_words.update(test_commands)
+
+        print(key_words)
+
+        try:
+            await key_words[message.content](message.author)
+        except KeyError:
             await self.process_commands(message)
+
+    @staticmethod
+    async def on_member_remove(member: discord.Member):
+        print(f'Member {member.name} left the server')
+        chanel = list(filter(lambda ch: ch.name == '✋приветствие', member.guild.text_channels))[0]
+        await chanel.send(f'Пользователь {member.name} покинул сервер.')
 
     @staticmethod
     async def on_member_join(member: discord.Member):
