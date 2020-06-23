@@ -38,7 +38,7 @@ class HemuBot(commands.Bot):
     @staticmethod
     async def on_guild_join(guild: discord.Guild):
         print(f'Join to server {guild.name}')
-        chanel = get(guild.text_channels, name='💥оффтопик')
+        chanel = get(guild.text_channels, name='✋приветствие')
 
         greeting_emb = discord.Embed(colour=discord.Color.dark_purple())
         greeting_emb.set_image(url=config.img_urls['server_join'])
