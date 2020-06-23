@@ -38,12 +38,12 @@ class HemuBot(commands.Bot):
     @staticmethod
     async def on_guild_join(guild: discord.Guild):
         print(f'Join to server {guild.name}')
-        chanel = get(guild.text_channels, name='основной')
+        chanel = get(guild.text_channels, name='💥оффтопик')
 
         greeting_emb = discord.Embed(colour=discord.Color.dark_purple())
         greeting_emb.set_image(url=config.img_urls['server_join'])
 
-        await chanel.send('**Всем привет, меня зовут Hemu-чан, надеюсь мы подружимся!~~**', embed=greeting_emb)
+        await chanel.send('**Всем привет, меня зовут Hemu-chan, надеюсь мы подружимся!~~**', embed=greeting_emb)
 
     @staticmethod
     async def on_member_remove(member: discord.Member):
