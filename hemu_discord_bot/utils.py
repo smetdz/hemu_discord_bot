@@ -1,11 +1,12 @@
 import discord
+from discord.utils import get
 
 import config
 
 
 def create_greeting(member: discord.Member, guild: discord.Guild) -> discord.Embed:
-    ch_rules = list(filter(lambda ch: ch.name == '🗿правила', guild.text_channels))[0]
-    ch_info = list(filter(lambda ch: ch.name == '📑инфо', guild.text_channels))[0]
+    ch_rules = get(member.guild.text_channels, name='🗿правила')
+    ch_info = get(member.guild.text_channels, name='📑инфо')
 
     template = {
         'title': f'Привет, {member.name}!\n',
@@ -15,15 +16,12 @@ def create_greeting(member: discord.Member, guild: discord.Guild) -> discord.Emb
                        f'А также посетить канал {ch_info.mention} -\n'
                        f'это позволит тебе легче освоиться на нашем сервере!\n'
                        f'И напоследок хочу пожелать тебе приятного общения!~',
-        'image_url': 'https://cdn.discordapp.com/attachments/724400545313587271/724585137731403786/3a5752e99cb6915a1f3b8bad68b3582a.gif'
-
     }
 
     greeting_emb = discord.Embed(title=template['title'], description=template['description'],
                                  colour=discord.Color.dark_purple())
-
     greeting_emb.set_footer(text=guild.name, icon_url=guild.icon_url)
-    greeting_emb.set_image(url=template['image_url'])
+    greeting_emb.set_image(url=config.img_urls['member_join'])
     greeting_emb.set_thumbnail(url=member.avatar_url)
 
     return greeting_emb
