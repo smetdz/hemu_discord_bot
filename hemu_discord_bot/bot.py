@@ -1,4 +1,4 @@
-from pathlib import Path
+import os
 
 import discord
 from discord.utils import get
@@ -67,4 +67,4 @@ bot = HemuBot(command_prefix="!")
 for command in commands_list:
     bot.add_command(command)
 
-bot.run(Path('TOKEN.txt').read_text())
+bot.run(os.environ['DISCORD_TOKEN'])
