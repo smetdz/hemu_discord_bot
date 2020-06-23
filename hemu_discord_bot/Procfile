@@ -1,1 +1,1 @@
-worker: python hemu_discord_bot\bot.py
+worker: python hemu_discord_bot/bot.py
