@@ -6,7 +6,7 @@ import config
 
 def create_greeting(member: discord.Member, guild: discord.Guild) -> discord.Embed:
     ch_rules = get(member.guild.text_channels, id=config.channels['rules_ch'])
-    ch_info = get(member.guild.text_channels, id=config.channels['info_id'])
+    ch_info = get(member.guild.text_channels, id=config.channels['info_ch'])
 
     template = {
         'title': f'Привет, {member.name}!\n',
