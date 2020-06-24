@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 
 import config
+from utils import not_admin_answer
 
 
 commands_list = []
@@ -36,4 +37,18 @@ async def kubey(ctx: commands.Context):
     kubey_emb.set_image(url=config.img_urls['kubey'])
 
     await ctx.send(embed=kubey_emb)
+
+
+@list_decorator
+@commands.command(name='усни')
+async def switch_of(ctx: commands.Context):
+    if ctx.author.id == config.CREATOR_ID:
+        sleep_emb = discord.Embed(title='Засыпаю...')
+        sleep_emb.set_image(url=config.img_urls['sleep'])
+
+        await ctx.send(embed=sleep_emb)
+        exit()
+
+    await not_admin_answer(ctx)
+
 

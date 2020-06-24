@@ -1,5 +1,6 @@
 import discord
 from discord.utils import get
+from discord.ext import commands
 
 import config
 
@@ -25,3 +26,10 @@ def create_greeting(member: discord.Member, guild: discord.Guild) -> discord.Emb
     greeting_emb.set_thumbnail(url=member.avatar_url)
 
     return greeting_emb
+
+
+async def not_admin_answer(ctx: commands.Context):
+    angry_enb = discord.Embed(title='Прав маловато, не буду слушаться.')
+    angry_enb.set_image(url=config.img_urls['angry'])
+
+    await ctx.send(embed=angry_enb)
