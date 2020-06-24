@@ -38,7 +38,7 @@ class HemuBot(commands.Bot):
     @staticmethod
     async def on_guild_join(guild: discord.Guild):
         print(f'Join to server {guild.name}')
-        chanel = get(guild.text_channels, name='✋приветствие')
+        chanel = get(guild.text_channels, id=config.channels['greeting_ch'])
 
         greeting_emb = discord.Embed(colour=discord.Color.dark_purple())
         greeting_emb.set_image(url=config.img_urls['server_join'])
@@ -48,13 +48,13 @@ class HemuBot(commands.Bot):
     @staticmethod
     async def on_member_remove(member: discord.Member):
         print(f'Member {member.name} left the server')
-        chanel = get(member.guild.text_channels, name='🌚переговорная')
+        chanel = get(member.guild.text_channels, id=config.channels['admin_ch'])
         await chanel.send(f'Пользователь {member.name} покинул сервер.')
 
     @staticmethod
     async def on_member_join(member: discord.Member):
         print(f'New member {member.name}')
-        chanel = get(member.guild.text_channels, name='✋приветствие')
+        chanel = get(member.guild.text_channels, id=config.channels['greeting_ch'])
         guild = member.guild
 
         emb_greeting = create_greeting(member, guild)
