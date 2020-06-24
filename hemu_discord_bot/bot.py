@@ -5,7 +5,7 @@ from discord.utils import get
 from discord.ext import commands
 
 import config
-from h_commands import commands_list
+from h_commands import CommandsList
 from utils import create_greeting
 
 
@@ -63,8 +63,5 @@ class HemuBot(commands.Bot):
 
 
 bot = HemuBot(command_prefix="!")
-
-for command in commands_list:
-    bot.add_command(command)
-
+bot.add_cog(CommandsList(bot))
 bot.run(os.environ['DISCORD_TOKEN'])
