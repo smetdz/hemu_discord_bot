@@ -54,7 +54,11 @@ class HemuBot(commands.Bot):
     @staticmethod
     async def on_member_join(member: discord.Member):
         print(f'New member {member.name}')
-        chanel = get(member.guild.text_channels, id=config.channels['greeting_ch'])
+        try:
+            chanel = get(member.guild.text_channels, id=config.channels['greeting_ch'])
+        except KeyError:
+            chanel = member.guild.text_channels[0]
+
         guild = member.guild
 
         emb_greeting = create_greeting(member, guild)
