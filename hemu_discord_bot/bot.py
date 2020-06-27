@@ -6,12 +6,13 @@ from discord.ext import commands
 
 import config
 from h_commands import CommandsList
+from twitch_notifier import TwitchNotifier
 from utils import create_greeting
 
 
 class HemuBot(commands.Bot):
     async def on_message(self, message: discord.Message):
-        print(message.content, message.author.roles)
+        print(f'Author: {message.author}   Content: {message.content}')
         if message.author == self.user:
             return
 
@@ -26,14 +27,16 @@ class HemuBot(commands.Bot):
 
             key_words.update(test_commands)
 
-        print(key_words)
-
         try:
             await key_words[message.content](message.author)
         except AttributeError:
             await key_words[message.content](message.guild)
         except KeyError:
             await self.process_commands(message)
+
+    async def on_ready(self):
+        twitch_notifier = TwitchNotifier(self)
+        await twitch_notifier.notification()
 
     @staticmethod
     async def on_guild_join(guild: discord.Guild):
@@ -66,6 +69,7 @@ class HemuBot(commands.Bot):
         await chanel.send(embed=emb_greeting)
 
 
-bot = HemuBot(command_prefix="!")
-bot.add_cog(CommandsList(bot))
-bot.run(os.environ['DISCORD_TOKEN'])
+if __name__ == '__main__':
+    bot = HemuBot(command_prefix="!")
+    bot.add_cog(CommandsList(bot))
+    bot.run(os.environ['DISCORD_TOKEN'])

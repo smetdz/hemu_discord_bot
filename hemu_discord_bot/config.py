@@ -1,5 +1,6 @@
 MODER_ROLE = 677842991649652756
 CREATOR_ID = 460542537011036161
+TWITCH_CLIENT_ID = '6vg5fnmrs4hmj3bfo1kjxijr4lbxng'
 
 img_urls = {
    'kubey': 'https://s7.gifyu.com/images/kubey.gif',
@@ -15,4 +16,5 @@ channels = {
    'test_room': 725106575660023810,
    'rules_ch': 718429007875538944,
    'info_ch': 724237304113135676,
+   'news': 677644853634662405
 }

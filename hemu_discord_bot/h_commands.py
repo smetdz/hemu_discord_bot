@@ -46,11 +46,7 @@ class CommandsList(commands.Cog):
 
         await not_admin_answer(ctx)
 
-    @commands.command()
-    async def crt_test(self, ctx: commands.Context, arg: str):
-        await ctx.send(f'coroutine named as {arg}')
-        await asyncio.sleep(20, self.bot.loop)
-        await ctx.send(f'{arg} finished')
+
 
 
 
