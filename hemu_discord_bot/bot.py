@@ -7,6 +7,7 @@ from discord.ext import commands
 import config
 from h_commands import CommandsList
 from twitch_notifier import TwitchNotifier
+from weather import WeatherCog
 from utils import create_greeting
 
 
@@ -72,4 +73,5 @@ class HemuBot(commands.Bot):
 if __name__ == '__main__':
     bot = HemuBot(command_prefix="!")
     bot.add_cog(CommandsList(bot))
+    bot.add_cog(WeatherCog(bot))
     bot.run(os.environ['DISCORD_TOKEN'])
