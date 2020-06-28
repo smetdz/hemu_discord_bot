@@ -14,7 +14,7 @@ class WeatherCog(commands.Cog):
         self.logo_url = 'https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/icons/logo_60x60.png'
 
     @commands.command(name='погода')
-    async def weather(self, ctx: commands.Context, city: str):
+    async def weather(self, ctx: commands.Context, *, city: str):
         data = await self.get_weather_data(city)
         if data:
             weather_data = data['weather'][0]
