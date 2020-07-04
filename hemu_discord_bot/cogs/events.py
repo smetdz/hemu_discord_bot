@@ -3,6 +3,7 @@ from discord.ext import commands
 from discord.utils import get
 
 import config
+from cogs.utils import reactions
 
 
 class Events(commands.Cog):
@@ -15,7 +16,7 @@ class Events(commands.Cog):
 
         try:
             chanel = get(member.guild.text_channels, id=config.channels['admin_ch'])
-        except Exception:
+        except KeyError:
             chanel = member.guild.text_channels[0]
 
         await chanel.send(f'Пользователь {member.name} покинул сервер.')
@@ -25,6 +26,8 @@ class Events(commands.Cog):
         print(f'Author: {message.author}   Content: {message.content}')
         if message.author == self.bot.user:
             return
+
+        await reactions(self.bot, message)
 
         # await self.bot.process_commands(message)
 

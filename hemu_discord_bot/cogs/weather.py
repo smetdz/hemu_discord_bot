@@ -6,7 +6,7 @@ import discord
 from discord.ext import commands
 
 
-class WeatherCog(commands.Cog):
+class Weather(commands.Cog):
     BASE_URL = 'http://openweathermap.org/'
     API_URL = 'http://api.openweathermap.org/data/2.5/'
 
@@ -67,4 +67,4 @@ class WeatherCog(commands.Cog):
 
 
 def setup(bot: commands.Bot):
-    bot.add_cog(WeatherCog(bot))
+    bot.add_cog(Weather(bot))
