@@ -1,14 +1,10 @@
-import asyncio
-import aiohttp
-
 import discord
 from discord.ext import commands
 
 import config
-from utils import not_admin_answer
 
 
-class CommandsList(commands.Cog):
+class Fun(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
@@ -35,18 +31,6 @@ class CommandsList(commands.Cog):
 
         await ctx.send(embed=kubey_emb)
 
-    @commands.command(name='усни')
-    async def switch_of(self, ctx: commands.Context):
-        if ctx.author.id == config.CREATOR_ID:
-            sleep_emb = discord.Embed(title='Засыпаю...')
-            sleep_emb.set_image(url=config.img_urls['sleep'])
 
-            await ctx.send(embed=sleep_emb)
-            exit()
-
-        await not_admin_answer(ctx)
-
-
-
-
-
+def setup(bot: commands.Bot):
+    bot.add_cog(Fun(bot))

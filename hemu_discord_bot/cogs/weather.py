@@ -1,5 +1,4 @@
 import os
-import asyncio
 import aiohttp
 import datetime
 
@@ -8,10 +7,13 @@ from discord.ext import commands
 
 
 class WeatherCog(commands.Cog):
+    BASE_URL = 'http://openweathermap.org/'
+    API_URL = 'http://api.openweathermap.org/data/2.5/'
+
     def __init__(self, bot):
         self.bot = bot
-        self.icons_url = 'http://openweathermap.org/img/wn/{}@4x.png'
-        self.logo_url = 'https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/icons/logo_60x60.png'
+        self.icons_url = self.BASE_URL + 'img/wn/{}@4x.png'
+        self.logo_url = self.BASE_URL + 'themes/openweathermap/assets/vendor/owm/img/icons/logo_60x60.png'
 
     @commands.command(name='погода')
     async def weather(self, ctx: commands.Context, *, city: str):
@@ -28,10 +30,9 @@ class WeatherCog(commands.Cog):
 
         await ctx.send(f'Не знаю такого города как "**{city}**", попробуй еще раз.')
 
-    @staticmethod
-    async def get_weather_data(city: str):
+    async def get_weather_data(self, city: str):
         async with aiohttp.ClientSession() as session:
-            response = await session.get(url=f'http://api.openweathermap.org/data/2.5/weather?'
+            response = await session.get(url=f'{self.API_URL}weather?'
                                              f'q={city}&'
                                              f'appid={os.environ["OPEN_WEATHER_KEY"]}&'
                                              f'lang=ru&'
@@ -63,3 +64,7 @@ class WeatherCog(commands.Cog):
         weather_emb.timestamp = datetime.datetime.utcnow()
 
         return weather_emb
+
+
+def setup(bot: commands.Bot):
+    bot.add_cog(WeatherCog(bot))
