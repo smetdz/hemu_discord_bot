@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from discord.utils import get
 
 import config
 
@@ -9,13 +10,16 @@ class Fun(commands.Cog):
         self.bot = bot
 
     @commands.command(name='аватар')
-    async def avatar(self, ctx: commands.Context, member=None):
+    async def avatar(self, ctx: commands.Context, *, member=None):
         if member:
             try:
                 user = list(ctx.message.mentions)[0]
             except IndexError:
-                await ctx.send(f'Не могу понять, что за пользователь этот твой "{member}", попробуй еще раз')
-                return
+                user = get(ctx.guild.members, name=member)
+
+                if not user:
+                    await ctx.send(f'Не могу понять, что за пользователь этот твой "{member}", попробуй еще раз')
+                    return
         else:
             user = ctx.author
 
