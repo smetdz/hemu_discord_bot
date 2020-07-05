@@ -81,7 +81,7 @@ class Anime(commands.Cog):
 
         try:
             description_ = re.sub(r'\[\[|]]', '', anime['description'])
-            description = re.sub(r'\[.{0,20}]', '', description_)
+            description = re.sub(r'\[[^]]*]', '', description_)
         except TypeError:
             description = 'Описание отсутствует.'
 
