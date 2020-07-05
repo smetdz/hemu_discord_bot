@@ -22,8 +22,11 @@ class Anime(commands.Cog):
 
         if anime:
             if isinstance(anime, list):
-                await ctx.send('Найденные аниме: ' + ', '.join(anime) +
-                               '.\nВызови команду и напиши название полностью.')
+                anime_list = '\n'.join(anime)
+                emb = discord.Embed(title='Найденные аниме:', colour=discord.Color.dark_purple(),
+                                    description=f'{anime_list}\n\n'
+                                                f'Вызови команду и напиши название полностью.')
+                await ctx.send(embed=emb)
                 return
             elif isinstance(anime, dict):
                 anime_emb = self.create_anime_emb(anime)
@@ -47,7 +50,7 @@ class Anime(commands.Cog):
                         break
 
                 if not current_anime_:
-                    anime_names_list = [anime['name'] for anime in anime_list]
+                    anime_names_list = [anime['russian'] for anime in anime_list]
                     return anime_names_list
 
             current_anime_ = anime_list[0]
