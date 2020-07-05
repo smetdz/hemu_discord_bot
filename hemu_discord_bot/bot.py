@@ -4,7 +4,7 @@ import discord
 from discord.ext import commands
 
 import config
-from cogs import events, fun, weather, welcome
+from cogs import events, fun, weather, welcome, anime
 from twitch_notifier import TwitchNotifier
 
 
@@ -17,7 +17,7 @@ class HemuBot(commands.Bot):
 if __name__ == '__main__':
     bot = HemuBot(command_prefix="!")
 
-    cogs = [events, fun, weather, welcome]
+    cogs = [events, fun, weather, welcome, anime]
 
     for cog in cogs:
         cog.setup(bot)
