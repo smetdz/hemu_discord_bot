@@ -10,9 +10,12 @@ class Welcome(commands.Cog):
         self.bot = bot
 
     @commands.Cog.listener()
-    async def on_guild_join(self, guild: discord.Guild):
-        print(f'Join to server {guild.name}')
-        chanel = get(guild.text_channels, id=config.channels['greeting_ch'])
+    async def on_guild_join(self, guild: discord.Guild, command: bool = False, chanel: discord.TextChannel = None):
+        if not command:
+            print(f'Join to server {guild.name}')
+
+        if not chanel:
+            chanel = get(guild.text_channels, id=config.channels['greeting_ch'])
 
         greeting_emb = discord.Embed(colour=discord.Color.dark_purple())
         greeting_emb.set_image(url=config.img_urls['server_join'])
@@ -31,6 +34,10 @@ class Welcome(commands.Cog):
         emb_greeting = self.create_greeting(member, guild)
 
         await chanel.send(embed=emb_greeting)
+
+    @commands.command(name='представься')
+    async def introduce(self, ctx: commands.Context):
+        await self.on_guild_join(ctx.guild, True, ctx.channel)
 
     @staticmethod
     def create_greeting(member: discord.Member, guild: discord.Guild) -> discord.Embed:
