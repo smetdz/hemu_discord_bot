@@ -107,11 +107,13 @@ class Anime(commands.Cog):
             anime_emb.add_field(name='Кол-во эпизодов', value=anime['episodes'])
 
         if anime['kind'] in ['movie', 'music']:
-            anime_emb.add_field(name='Длительность', value=f'{anime["duration"]} мин.')
+            anime_emb.add_field(name='Длительность', value=f'{str(anime["duration"])} мин.')
         else:
             anime_emb.add_field(name='Длительность эпизода', value=f'{anime["duration"]} мин.')
 
-        anime_emb.add_field(name='Студия', value=', '.join([studio['filtered_name'] for studio in anime['studios']]))
+        anime_emb.add_field(name='Студия',
+                            value=', '.join([studio['filtered_name']
+                                             for studio in anime['studios']]) if anime['studios'] else '-')
 
         anime_emb.set_thumbnail(url=f'{self.BASE_URL}/{anime["image"]["original"]}')
         anime_emb.set_footer(icon_url=self.shiki_icon, text='Shikimori')
