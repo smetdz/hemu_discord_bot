@@ -33,7 +33,7 @@ class Welcome(commands.Cog):
         guild = member.guild
         emb_greeting = self.create_greeting(member, guild)
 
-        await chanel.send(embed=emb_greeting)
+        await chanel.send(f'{member.mention}', embed=emb_greeting)
 
     @commands.command(name='представься')
     async def introduce(self, ctx: commands.Context):
