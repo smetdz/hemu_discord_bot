@@ -10,7 +10,7 @@ class Fun(commands.Cog):
         self.bot = bot
 
     @commands.command(name='аватар')
-    async def avatar(self, ctx: commands.Context, *, member=None):
+    async def avatar(self, ctx: commands.Context, *, member: str = None):
         if member:
             try:
                 user = list(ctx.message.mentions)[0]
