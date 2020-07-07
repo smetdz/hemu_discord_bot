@@ -6,7 +6,7 @@ import config
 
 
 async def reactions(bot: commands.Bot, message: discord.Message):
-    bot_role = get(message.guild.roles, id=config.HEMU_ROLE)
+    bot_role = get(message.guild.roles, name='Hemu')
 
     if bot.user in message.mentions or bot_role in message.role_mentions:
         await message.channel.send(config.emoji_dict['angry_hemu'])

@@ -25,10 +25,11 @@ class Welcome(commands.Cog):
     @commands.Cog.listener()
     async def on_member_join(self, member: discord.Member):
         print(f'New member {member.name}')
-        try:
-            chanel = get(member.guild.text_channels, id=config.channels['greeting_ch'])
-        except KeyError:
-            chanel = member.guild.text_channels[0]
+
+        chanel = get(member.guild.text_channels, id=config.channels['greeting_ch'])
+
+        if not chanel:
+            chanel = list(member.guild.text_channels)[0]
 
         guild = member.guild
         emb_greeting = self.create_greeting(member, guild)
@@ -47,9 +48,11 @@ class Welcome(commands.Cog):
         template = {
             'title': f'Привет, {member.name}!\n',
             'description': f'Добро пожаловать в мир истинных мужчин и девочек волшебниц, {member.mention}!\n'
-                           f'Прежде чем начать общение,\n предлагаю тебе пройти в канал {ch_rules.mention},\n'
+                           f'Прежде чем начать общение,\n предлагаю тебе пройти в канал '
+                           f'{ch_rules.mention if ch_rules else "с правилами"},\n'
                            f'чтобы изучить условия нашего контракта.\n'
-                           f'А также посетить канал {ch_info.mention} -\n'
+                           f'А также посетить канал '
+                           f'{ch_info.mention if ch_info else "с инфо"} -\n'
                            f'это позволит тебе легче освоиться на нашем сервере!\n'
                            f'И напоследок хочу пожелать тебе приятного общения!~',
         }

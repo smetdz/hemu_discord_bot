@@ -14,10 +14,10 @@ class Events(commands.Cog):
     async def on_member_remove(self, member: discord.Member):
         print(f'Member {member.name} left the server')
 
-        try:
-            chanel = get(member.guild.text_channels, id=config.channels['admin_ch'])
-        except KeyError:
-            chanel = member.guild.text_channels[0]
+        chanel = get(member.guild.text_channels, id=config.channels['admin_ch'])
+
+        if not chanel:
+            chanel = list(member.guild.text_channels)[0]
 
         await chanel.send(f'Пользователь {member.name} покинул сервер.')
 
