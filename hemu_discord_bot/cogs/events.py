@@ -3,7 +3,7 @@ from discord.ext import commands
 from discord.utils import get
 
 import config
-from cogs.utils import reactions
+from cogs.utils import reactions_on_messages
 
 
 class Events(commands.Cog):
@@ -27,7 +27,7 @@ class Events(commands.Cog):
         if message.author == self.bot.user:
             return
 
-        await reactions(self.bot, message)
+        await reactions_on_messages(self.bot, message)
 
         # await self.bot.process_commands(message)
 

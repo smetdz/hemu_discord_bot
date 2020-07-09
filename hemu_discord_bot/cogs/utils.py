@@ -5,7 +5,7 @@ from discord.utils import get
 import config
 
 
-async def reactions(bot: commands.Bot, message: discord.Message):
+async def reactions_on_messages(bot: commands.Bot, message: discord.Message):
     bot_role = get(message.guild.roles, name='Hemu')
 
     if bot.user in message.mentions or bot_role in message.role_mentions:
@@ -16,7 +16,7 @@ async def reactions(bot: commands.Bot, message: discord.Message):
     if 'киригири' in text:
         await message.channel.send(config.emoji_dict['kirigiri'])
 
-    if 'падла' in text or 'гнус' in text:
+    if any([(word in text) for word in ['падла', 'гнус', 'padla', 'gnus']]):
         emb = discord.Embed(title='', colour=discord.Color.dark_purple())
         emb.set_image(url=config.img_urls['sayaka'])
         await message.channel.send(f'{message.content}', embed=emb)
