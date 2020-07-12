@@ -4,7 +4,7 @@ import discord
 from discord.ext import commands
 
 import config
-from cogs import events, fun, weather, welcome, anime, info
+from cogs import events, fun, searches, welcome, anime, info
 from twitch_notifier import TwitchNotifier
 
 
@@ -15,11 +15,11 @@ class HemuBot(commands.Bot):
 
 
 if __name__ == '__main__':
-    bot = HemuBot(command_prefix="!")
+    hemu = HemuBot(command_prefix="!")
 
-    cogs = [events, fun, weather, welcome, anime, info]
+    cogs = [events, fun, searches, welcome, anime, info]
 
     for cog in cogs:
-        cog.setup(bot)
+        cog.setup(hemu)
 
-    bot.run(os.environ['DISCORD_TOKEN'])
+    hemu.run(os.environ['DISCORD_TOKEN'])
