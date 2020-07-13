@@ -4,7 +4,7 @@ import discord
 from discord.ext import commands
 
 import config
-from cogs import events, fun, searches, welcome, anime, info
+from cogs import events, fun, searches, welcome, anime, info, dev
 from twitch_notifier import TwitchNotifier
 
 
@@ -18,7 +18,7 @@ if __name__ == '__main__':
     hemu = HemuBot(command_prefix="!")
     hemu.remove_command('help')
 
-    cogs = [events, fun, searches, welcome, anime, info]
+    cogs = [events, fun, searches, welcome, anime, info, dev]
 
     for cog in cogs:
         cog.setup(hemu)

@@ -22,7 +22,7 @@ class Info(commands.Cog):
                 role = get(ctx.guild.roles, name=role_name)
 
                 if not role:
-                    await ctx.send(f'Роли "{role}" нет на сервере, попробуй еще раз.')
+                    await ctx.send(f'Роли "{role_name}" нет на сервере, попробуй еще раз.')
                     return
 
             role_emb = discord.Embed(title=f'Пользователи с ролью {role.name}', colour=role.colour,
