@@ -9,7 +9,7 @@ class Fun(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
-    @commands.command(name='аватар')
+    @commands.command(name='avatar', aliases=('аватар',))
     async def avatar(self, ctx: commands.Context, *, member: str = None):
         if member:
             try:
@@ -28,7 +28,7 @@ class Fun(commands.Cog):
 
         await ctx.send(embed=icon_emb)
 
-    @commands.command(name='кубей')
+    @commands.command(name='kyuubey', aliases=('кубей',))
     async def kubey(self, ctx: commands.Context):
         kubey_emb = discord.Embed(title=f'Уйди!', colour=discord.Color.dark_purple())
         kubey_emb.set_image(url=config.img_urls['kubey'])

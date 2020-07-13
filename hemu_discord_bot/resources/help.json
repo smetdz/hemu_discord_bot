@@ -69,7 +69,7 @@
       {
         "name": "help",
         "aliases": ["commands", "h", "cmds"],
-        "description": "Показывает список команд.\nЧтобы получить информацию о выбранной команде используте `!help [command]",
+        "description": "Показывает список команд.\nЧтобы получить информацию о выбранной команде используте `!help [command]`",
         "usage": "!help [command]",
         "example": "!help аниме"
       }

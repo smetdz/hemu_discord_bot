@@ -16,6 +16,7 @@ class HemuBot(commands.Bot):
 
 if __name__ == '__main__':
     hemu = HemuBot(command_prefix="!")
+    hemu.remove_command('help')
 
     cogs = [events, fun, searches, welcome, anime, info]
 
