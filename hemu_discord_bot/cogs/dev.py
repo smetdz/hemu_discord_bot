@@ -8,7 +8,7 @@ class Dev(commands.Cog):
         self.bot = bot
 
     @commands.command()
-    @commands.check(commands.is_owner())
+    @commands.is_owner()
     async def eval(self, ctx: commands.Context, *, code: str):
         print(code)
 
