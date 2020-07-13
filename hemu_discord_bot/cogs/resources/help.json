@@ -1,0 +1,78 @@
+[
+  {
+    "cog_name": "Забавы",
+    "commands": [
+      {
+        "name": "аватар",
+        "aliases": ["avatar"],
+        "description": "Показывает аватар пользователя.",
+        "usage": "!аватар [member]",
+        "example": "!аватар @user"
+      },
+      {
+        "name": "кубей",
+        "aliases": ["kyuubey"],
+        "description": "Гифка с Кубеем",
+        "usage": "!кубей",
+        "example": ""
+      }
+    ]
+  },
+  {
+    "cog_name": "Сервисы",
+    "commands": [
+      {
+        "name": "погода",
+        "aliases": ["w", "weather"],
+        "description": "Показывает текущую погоду в указанном населенном пункте.",
+        "usage": "!погода [city]",
+        "example": "!погода Санкт-Петербург"
+      }
+    ]
+  },
+  {
+    "cog_name": "Аниме",
+    "commands": [
+      {
+        "name": "аниме",
+        "aliases": ["anime"],
+        "description": "Показывает информацию об аниме.",
+        "usage": "!аниме [anime]",
+        "example": "!аниме Наруто"
+      },
+      {
+        "name": "манга",
+        "aliases": ["manga"],
+        "description": "Показывает информацию о манге.",
+        "usage": "!манга [manga]",
+        "example": "!манга Берсерк"
+      },
+      {
+        "name": "ранобэ",
+        "aliases": ["ranobe"],
+        "description": "Показывает информацию о ранобе.",
+        "usage": "!ранобэ [ranobe]",
+        "example": "!ранобе Цикл историй: Первый сезон"
+      }
+    ]
+  },
+  {
+    "cog_name": "Инфо",
+    "commands": [
+      {
+        "name": "роль",
+        "aliases": ["role"],
+        "description": "Показывает всех пользователей с указанной ролью.",
+        "usage": "!роль [role]",
+        "example": "!роль @role"
+      },
+      {
+        "name": "help",
+        "aliases": ["commands", "h", "cmds"],
+        "description": "Показывает список команд.\nЧтобы получить информацию о выбранной команде используте `!help [command]",
+        "usage": "!help [command]",
+        "example": "!help аниме"
+      }
+    ]
+  }
+]
