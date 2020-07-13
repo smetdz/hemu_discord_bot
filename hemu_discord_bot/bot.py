@@ -10,6 +10,9 @@ from twitch_notifier import TwitchNotifier
 
 class HemuBot(commands.Bot):
     async def on_ready(self):
+        game = discord.Game("!help")
+        await self.change_presence(status=discord.Status.online, activity=game)
+
         twitch_notifier = TwitchNotifier(self)
         await twitch_notifier.notification()
 
