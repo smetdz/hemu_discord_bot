@@ -18,7 +18,7 @@ class Dev(commands.Cog):
 
         if 'pathlib' in code:
             import pathlib
-            variables['pahtlib'] = pathlib
+            variables['pathlib'] = pathlib
 
         res = eval(code, variables)
         print(res)
