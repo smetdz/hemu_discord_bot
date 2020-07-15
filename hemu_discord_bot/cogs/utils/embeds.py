@@ -4,10 +4,10 @@ from typing import Union
 import discord
 
 from cogs.services.openweather import Weather
-from cogs.services.shikimori import Anime, Manga, Ranobe
+from cogs.services.shikimori import Anime, Manga, Ranobe, Character
 
 
-def create_weather_emb(city: str, weather: Weather):
+def create_weather_emb(city: str, weather: Weather) -> discord.Embed:
     weather_emb = discord.Embed(title=f'**{weather.description.title()}**',
                                 colour=discord.Color.dark_purple())
 
@@ -29,7 +29,7 @@ def create_weather_emb(city: str, weather: Weather):
     return weather_emb
 
 
-def create_title_emb(title: Union[Anime, Manga, Ranobe]):
+def create_title_emb(title: Union[Anime, Manga, Ranobe]) -> discord.Embed:
     genres = ', '.join([genre for genre in title.genres]) + '.'
 
     title_emb = discord.Embed(title=title.title_name, description=f'{title.description}\n\nЖанры: {genres}',
@@ -67,3 +67,32 @@ def create_title_emb(title: Union[Anime, Manga, Ranobe]):
     title_emb.timestamp = datetime.datetime.utcnow()
 
     return title_emb
+
+
+def create_char_emb(character: Character) -> discord.Embed:
+    char_emb = discord.Embed(title=character.name, url=character.url, description=character.description,
+                             colour=discord.Color.dark_purple())
+
+    char_emb.add_field(inline=False, name='Аниме',
+                       value=create_field_value([anime['russian']
+                                                 for anime in character.animes]) if character.animes else '-')
+    char_emb.add_field(inline=False, name='Манга',
+                       value=create_field_value([manga['russian']
+                                                 for manga in character.mangas]) if character.mangas else '-')
+
+    char_emb.set_thumbnail(url=character.image)
+    char_emb.set_footer(icon_url=character.logo_icon, text='Shikimori')
+    char_emb.timestamp = datetime.datetime.utcnow()
+
+    return char_emb
+
+
+def create_field_value(value_list: list) -> str:
+    value = ''
+    for val in value_list:
+        if len(value + val + ', ') < 200:
+            value += val + ', '
+            continue
+        return value + '...'
+
+    return value[:-2] + '.'
