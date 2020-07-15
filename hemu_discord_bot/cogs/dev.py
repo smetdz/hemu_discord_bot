@@ -16,6 +16,7 @@ class Dev(commands.Cog):
         variables = {
             'ctx': ctx,
             'discord': discord,
+            'bot': self.bot,
         }
 
         if 'pathlib' in code:
