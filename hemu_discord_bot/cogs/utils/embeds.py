@@ -75,10 +75,16 @@ def create_char_emb(character: Character) -> discord.Embed:
 
     char_emb.add_field(inline=False, name='Аниме',
                        value=create_field_value([anime['russian']
-                                                 for anime in character.animes]) if character.animes else '-')
+                                                 for anime in character.animes], 200) if character.animes else '-')
     char_emb.add_field(inline=False, name='Манга',
                        value=create_field_value([manga['russian']
-                                                 for manga in character.mangas]) if character.mangas else '-')
+                                                 for manga in character.mangas
+                                                 if manga["kind"] == "manga"], 200) if character.mangas else '-')
+
+    char_emb.add_field(inline=False, name='Ранобэ',
+                       value=create_field_value([manga['russian']
+                                                 for manga in character.mangas
+                                                 if manga["kind"] == "novel"], 200) if character.mangas else '-')
 
     char_emb.set_thumbnail(url=character.image)
     char_emb.set_footer(icon_url=character.logo_icon, text='Shikimori')
@@ -87,10 +93,10 @@ def create_char_emb(character: Character) -> discord.Embed:
     return char_emb
 
 
-def create_field_value(value_list: list) -> str:
+def create_field_value(value_list: list, limit: int) -> str:
     value = ''
     for val in value_list:
-        if len(value + val + ', ') < 200:
+        if len(value + val + ', ') < limit:
             value += val + ', '
             continue
         return value + '...'
