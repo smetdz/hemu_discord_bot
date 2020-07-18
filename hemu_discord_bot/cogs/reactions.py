@@ -36,10 +36,10 @@ class ReactionCog(commands.Cog):
                 return
 
         try:
-            reaction_g = Reaction(string=string, reaction=reaction, is_emb=is_emb,
+            reaction_g = Reaction(string=string.lower(), reaction=reaction, is_emb=is_emb,
                                   guild=fields.Reference(Guild, ctx.guild.id))
             await reaction_g.commit()
-            self.bot.add_reaction(ctx.guild.name, string, reaction, is_emb)
+            self.bot.add_reaction(ctx.guild.name, string.lower(), reaction, is_emb)
             await ctx.send('Реакция была успешно создана.')
         except Exception as e:
             await ctx.send('При создании реакции произошла ошибка, попробуйте еще раз.')
@@ -48,12 +48,12 @@ class ReactionCog(commands.Cog):
     @reaction.command(name='remove', aliases=['del', 'delete'])
     @commands.has_permissions(administrator=True)
     async def remove_reaction(self, ctx: commands.Context, string: str):
-        reaction = await Reaction.find_one({'string': string})
+        reaction = await Reaction.find_one({'string': string.lower()})
 
         if reaction:
             await reaction.remove()
             await ctx.send(f'Реакция "{reaction.string} : {reaction.reaction}" была удалена.')
-            self.bot.remove_reaction(ctx.guild.name, string)
+            self.bot.remove_reaction(ctx.guild.name, string.lower())
             return
 
         await ctx.send(f'Нету реакции на "{string}".')

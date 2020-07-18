@@ -32,7 +32,7 @@ class Events(commands.Cog):
 
     async def reactions_on_message(self, message: discord.Message):
         for string, reaction in self.bot.guilds_reactions[message.guild.name].items():
-            if string in message.content:
+            if string.lower() in message.content.lower():
                 if reaction.is_emb:
                     emb = discord.Embed(title='', colour=discord.Colour.dark_purple())
                     emb.set_image(url=reaction.rct)
