@@ -7,10 +7,11 @@ from discord.ext import commands
 from discord.utils import get
 
 import config
+from bot import HemuBot
 
 
 class Info(commands.Cog):
-    def __init__(self, bot: commands.Bot):
+    def __init__(self, bot: HemuBot):
         self.bot = bot
 
     @commands.command(name='роль', aliases=('role',))
@@ -78,5 +79,5 @@ class Info(commands.Cog):
         await ctx.send(embed=commands_emb)
 
 
-def setup(bot: commands.Bot):
+def setup(bot: HemuBot):
     bot.add_cog(Info(bot))

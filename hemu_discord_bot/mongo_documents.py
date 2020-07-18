@@ -9,7 +9,7 @@ instance = MotorAsyncIOInstance()
 class Guild(Document):
     _id = fields.IntegerField(unique=True)
     title = fields.StrField()
-    reactions_on = fields.BooleanField()
+    reactions_status = fields.BooleanField()
 
     class Meta:
         collection_name = 'guild'

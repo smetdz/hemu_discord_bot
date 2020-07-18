@@ -2,12 +2,12 @@ import discord
 from discord.ext import commands
 from discord.utils import get
 
+from bot import HemuBot
 import config
-from cogs.utils.utils import reactions_on_messages
 
 
 class Events(commands.Cog):
-    def __init__(self, bot: commands.Bot):
+    def __init__(self, bot: HemuBot):
         self.bot = bot
 
     @commands.Cog.listener()
@@ -27,10 +27,20 @@ class Events(commands.Cog):
         if message.author == self.bot.user:
             return
 
-        await reactions_on_messages(self.bot, message)
+        if self.bot.guilds_reactions_status[message.guild.id]:
+            await self.reactions_on_message(message)
 
-        # await self.bot.process_commands(message)
+    async def reactions_on_message(self, message: discord.Message):
+        for string, reaction in self.bot.guilds_reactions[message.guild.name].items():
+            if string in message.content:
+                if reaction.is_emb:
+                    emb = discord.Embed(title='', colour=discord.Colour.dark_purple())
+                    emb.set_image(url=reaction.rct)
+                    await message.channel.send(embed=emb)
+                    return
+                await message.channel.send(reaction.rct)
+                return
 
 
-def setup(bot: commands.Bot):
+def setup(bot: HemuBot):
     bot.add_cog(Events(bot))
