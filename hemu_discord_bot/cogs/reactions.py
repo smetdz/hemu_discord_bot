@@ -18,7 +18,7 @@ class ReactionCog(commands.Cog):
     @reaction.command(name='add')
     @commands.has_permissions(administrator=True)
     async def add_reaction(self, ctx: commands.Context, string: str, reaction: str, is_emb: str = None):
-        is_emb = True if is_emb in ['e', 'emb', '-e'] else False
+        is_emb = True if is_emb in ['-e', '-emb', '-e'] else False
 
         if is_emb:
             try:

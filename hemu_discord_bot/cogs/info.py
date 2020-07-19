@@ -67,7 +67,6 @@ class Info(commands.Cog):
         commands_emb.set_author(name='Hemu', icon_url=self.bot.user.avatar_url)
 
         for cog in cogs_help:
-            print(cog['commands'].items())
             commands_str = ', '.join([f'`{item["name"]}`' for _, item in cog['commands'].items()])
             commands_emb.add_field(inline=False, name=cog['cog_name'], value=commands_str)
 
