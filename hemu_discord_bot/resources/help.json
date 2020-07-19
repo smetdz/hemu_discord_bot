@@ -96,7 +96,7 @@
           "name": "add",
           "aliases": ["create"],
           "description": "Создает новую реакцию.",
-          "usage": "!reaction add [string] [reaction] -emb/-e \nПоследнее указывать если реакция это картинка и вы хотите обернуть ее в эмбед.)",
+          "usage": "!reaction add [string] [reaction] -emb/-e \nПоследнее указывать если реакция это картинка и вы хотите обернуть ее в эмбед.",
           "example": "!reaction add \"anime was a mistake\" \"except JoJo, that's fine\""
           },
           "remove":{
