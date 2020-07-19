@@ -1,85 +1,127 @@
 [
   {
     "cog_name": "Забавы",
-    "commands": [
-      {
+    "commands": {
+      "аватар": {
         "name": "аватар",
         "aliases": ["avatar"],
         "description": "Показывает аватар пользователя.",
         "usage": "!аватар [member]",
         "example": "!аватар @user"
       },
-      {
+      "кубей": {
         "name": "кубей",
         "aliases": ["kyuubey"],
         "description": "Гифка с Кубеем",
         "usage": "!кубей",
         "example": ""
       }
-    ]
+    }
   },
   {
     "cog_name": "Сервисы",
-    "commands": [
-      {
+    "commands": {
+      "погода":{
         "name": "погода",
         "aliases": ["w", "weather"],
         "description": "Показывает текущую погоду в указанном населенном пункте.",
         "usage": "!погода [city]",
         "example": "!погода Санкт-Петербург"
       }
-    ]
+    }
   },
   {
     "cog_name": "Аниме",
-    "commands": [
-      {
+    "commands": {
+      "аниме":{
         "name": "аниме",
         "aliases": ["anime"],
         "description": "Показывает информацию об аниме.",
         "usage": "!аниме [anime]",
         "example": "!аниме Наруто"
       },
-      {
+      "манга":{
         "name": "манга",
         "aliases": ["manga"],
         "description": "Показывает информацию о манге.",
         "usage": "!манга [manga]",
         "example": "!манга Берсерк"
       },
-      {
+      "ранобэ":{
         "name": "ранобэ",
         "aliases": ["ranobe"],
         "description": "Показывает информацию о ранобэ.",
         "usage": "!ранобэ [ranobe]",
         "example": "!ранобэ Цикл историй: Первый сезон"
       },
-      {
+      "персонаж":{
         "name": "персонаж",
         "aliases": ["character"],
         "description": "Показывает информацию о персонаже из аниме, манги и ранобэ.",
         "usage": "!персонаж [character]",
         "example": "!персонаж Хомура Акэми"
       }
-    ]
+    }
   },
   {
     "cog_name": "Инфо",
-    "commands": [
-      {
+    "commands": {
+      "роль":{
         "name": "роль",
         "aliases": ["role"],
         "description": "Показывает всех пользователей с указанной ролью.",
         "usage": "!роль [role]",
         "example": "!роль @role"
       },
-      {
+      "help":{
         "name": "help",
         "aliases": ["commands", "h", "cmds"],
         "description": "Показывает список команд.\nЧтобы получить информацию о выбранной команде используте `!help [command]`",
         "usage": "!help [command]",
         "example": "!help аниме"
       }
-    ]
+    }
+  },
+  {
+    "cog_name": "Реакции",
+    "commands": {
+      "reaction": {
+        "name": "reaction",
+        "aliases": [],
+        "description": "Вызывайте с подкомандами 'add', 'remove', 'switch', 'list'.\n Используйте !help reaction [имя подкоманды]",
+        "usage": "!reaction [sub command] [args]",
+        "example": "!reaction list",
+        "sub_commands": {
+          "add":{
+          "name": "add",
+          "aliases": ["create"],
+          "description": "Создает новую реакцию.",
+          "usage": "!reaction add [string] [reaction] -emb/-e \nПоследнее указывать если реакция это картинка и вы хотите обернуть ее в эмбед.)",
+          "example": "!reaction add \"anime was a mistake\" \"except JoJo, that's fine\""
+          },
+          "remove":{
+          "name": "remove",
+          "aliases": ["del, delete"],
+          "description": "Удаляет уже существующую реакцию.",
+          "usage": "!reaction remove [string]",
+          "example": "!reaction remove str"
+          },
+          "list":{
+          "name": "list",
+          "aliases": ["lst, show"],
+          "description": "Показывает список реакций.",
+          "usage": "!reaction list",
+            "example": "!reaction list"
+          },
+          "switch":{
+          "name": "switch",
+          "aliases": [],
+          "description": "Включает или выключает реакции на сервере",
+          "usage": "!reaction switch",
+            "example": "!reaction switch"
+          }
+        }
+      }
+    }
   }
 ]

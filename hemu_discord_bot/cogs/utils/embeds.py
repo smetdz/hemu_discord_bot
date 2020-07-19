@@ -7,6 +7,33 @@ from cogs.services.openweather import Weather
 from cogs.services.shikimori import Anime, Manga, Ranobe, Character
 
 
+def create_help_command_emb(current_command: dict, author) -> discord.Embed:
+    command_emb = discord.Embed(title=f'Команда {current_command["name"]}',
+                                description=current_command['description'],
+                                colour=discord.Color.dark_purple())
+
+    try:
+        command_emb.add_field(inline=False, name='**Подкоманды**',
+                              value=", ".join([f"`{sub_command['name']}`"
+                                               for _, sub_command in current_command['sub_commands'].items()]))
+    except KeyError:
+        pass
+
+    command_emb.add_field(inline=False, name='**Использование**', value=f'`{current_command["usage"]}`')
+
+    if current_command['example']:
+        command_emb.add_field(inline=False, name='**Пример**', value=f'`{current_command["example"]}`')
+
+    if current_command['aliases']:
+        command_emb.add_field(inline=False, name='**Псевдонимы**',
+                              value=", ".join([f"`{als}`" for als in current_command["aliases"]]), )
+
+    command_emb.set_footer(text=f'Запрошено {author}')
+    command_emb.timestamp = datetime.datetime.utcnow()
+
+    return command_emb
+
+
 def create_weather_emb(city: str, weather: Weather) -> discord.Embed:
     weather_emb = discord.Embed(title=f'**{weather.description.title()}**',
                                 colour=discord.Color.dark_purple())
