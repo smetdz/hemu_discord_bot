@@ -6,6 +6,7 @@ from discord.ext import commands
 from discord.utils import get
 
 import config
+from config import hemu_emoji
 from bot import HemuBot
 from cogs.utils.embeds import create_help_command_emb
 
@@ -22,7 +23,7 @@ class Info(commands.Cog):
                 role = get(ctx.guild.roles, name=role_name)
 
                 if not role:
-                    await ctx.send(f'Роли "{role_name}" нет на сервере, попробуй еще раз.')
+                    await ctx.send(f'Роли "{role_name}" нет на сервере, попробуй еще раз. {hemu_emoji["sad_hemu"]}')
                     return
 
             role_emb = discord.Embed(title=f'Пользователи с ролью {role.name}', colour=role.colour,
@@ -40,7 +41,7 @@ class Info(commands.Cog):
 
             if not current_command:
                 await ctx.send(f'Не знаю такой команды как **{command_name}**,'
-                               f' попробуй еще раз{config.emoji_dict["angry_hemu"]}')
+                               f' попробуй еще раз{hemu_emoji["sad_hemu"]}')
                 return
 
             command_emb = create_help_command_emb(current_command, ctx.author.name)
@@ -53,7 +54,7 @@ class Info(commands.Cog):
                 c_sub_command = current_command['sub_commands'][sub_command]
             except KeyError:
                 await ctx.send(f'Не знаю такой подкоманды как **{command_name}**,'
-                               f' попробуй еще раз{config.emoji_dict["angry_hemu"]}')
+                               f' попробуй еще раз{hemu_emoji["sad_hemu"]}')
                 return
 
             command_emb = create_help_command_emb(c_sub_command, ctx.author.name)

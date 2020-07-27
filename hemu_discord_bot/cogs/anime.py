@@ -5,6 +5,7 @@ from discord.ext import commands
 
 from cogs.services.shikimori import ShikimoriRef, Anime, Manga, Ranobe, Character
 from cogs.utils.embeds import create_title_emb, create_char_emb
+from config import hemu_emoji
 
 
 class TitleCog(commands.Cog):
@@ -20,7 +21,7 @@ class TitleCog(commands.Cog):
             await self.return_info(ctx, 'anime', anime)
             return
 
-        await ctx.send(f'Не могу найти аниме "**{anime_name}**". Попробуй еще раз.')
+        await ctx.send(f'Не могу найти аниме "**{anime_name}**". Попробуй еще раз.{hemu_emoji["sad_hemu"]}')
 
     @commands.command(name='manga', aliases=('манга',))
     async def manga(self, ctx: commands.Context, *, manga_name: str):
@@ -42,7 +43,7 @@ class TitleCog(commands.Cog):
             await self.return_info(ctx, 'ranobe', ranobe)
             return
 
-        await ctx.send(f'Не могу найти ранобе "**{ranobe_name}**". Попробуй еще раз.')
+        await ctx.send(f'Не могу найти ранобе "**{ranobe_name}**". Попробуй еще раз.{hemu_emoji["sad_hemu"]}')
 
     @commands.command(name='character', aliases=('персонаж',))
     async def character(self, ctx: commands.Context, *, char_name: str):
@@ -53,7 +54,7 @@ class TitleCog(commands.Cog):
             await self.return_info(ctx, 'character', character)
             return
 
-        await ctx.send(f'Не могу найти персонажа "**{char_name}**". Попробуй еще раз.')
+        await ctx.send(f'Не могу найти персонажа "**{char_name}**". Попробуй еще раз.{hemu_emoji["sad_hemu"]}')
 
     @staticmethod
     async def return_info(ctx: commands.Context, info_type: str,

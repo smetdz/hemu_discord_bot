@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 
 from bot import HemuBot
+from config import hemu_emoji
 from cogs.notifications.youtube_ntf import YouTubeNotifier
 from cogs.services.openweather import OpenWeatherRef
 from cogs.services.youtube import YouTubeRef
@@ -52,7 +53,7 @@ class Searches(commands.Cog):
             await ctx.send(embed=emb)
             return
 
-        await ctx.send("Нет ютуб каналов.")
+        await ctx.send(f'Нет ютуб каналов.{hemu_emoji["sad_hemu"]}')
 
     @youtube.command(name='add', alisases=('добавить', ))
     @commands.has_permissions(administrator=True)
@@ -66,10 +67,10 @@ class Searches(commands.Cog):
 
         try:
             await self.youtube_notifier.add_to_channel(data)
-            await ctx.send('Канал успешно сохранен.')
+            await ctx.send(f'Канал успешно сохранен.{hemu_emoji["hemu_fun"]}')
         except Exception as e:
             print(e.args, e)
-            await ctx.send('Произошла ошибка при сохранении.')
+            await ctx.send(f'Произошла ошибка при сохранении.{hemu_emoji["sad_hemu"]}')
 
     @youtube.command(name='remove', aliases=('del', 'delete'))
     @commands.has_permissions(administrator=True)
@@ -91,7 +92,7 @@ class Searches(commands.Cog):
                 try:
                     role_id = get_role(ctx, role_name).id
                 except errors.InvalidRole:
-                    await ctx.send(f'Роли "{role_name}" нет на сервере, попробуй еще раз.')
+                    await ctx.send(f'Роли "{role_name}" нет на сервере, попробуй еще раз.{hemu_emoji["sad_hemu"]}')
                     return
         else:
             role_id = 0
@@ -99,7 +100,8 @@ class Searches(commands.Cog):
         try:
             channel_id = get_text_channel(ctx, ntf_txt_channel).id
         except errors.InvalidTextChannel:
-            await ctx.send(f'Текстового канала "{ntf_txt_channel}" нет на сервере, попробуй еще раз.')
+            await ctx.send(f'Текстового канала "{ntf_txt_channel}" нет на сервере,'
+                           f' попробуй еще раз.{hemu_emoji["sad_hemu"]}')
             return
 
         return {
@@ -114,7 +116,7 @@ class Searches(commands.Cog):
         try:
             video = await YouTubeRef().get_video(video_title)
         except VideoDoesNotExist:
-            await ctx.send(f'Не могу найти видео "{video_title}", попробуй еще раз.')
+            await ctx.send(f'Не могу найти видео "{video_title}", попробуй еще раз.{hemu_emoji["sad_hemu"]}')
             return
 
         await ctx.send(video.video_url)
@@ -129,7 +131,7 @@ class Searches(commands.Cog):
             await ctx.send(embed=weather_emb)
             return
 
-        await ctx.send(f'Не знаю такого города как "**{city}**", попробуй еще раз.')
+        await ctx.send(f'Не знаю такого города как "**{city}**", попробуй еще раз.{hemu_emoji["sad_hemu"]}')
 
 
 def setup(bot: HemuBot):

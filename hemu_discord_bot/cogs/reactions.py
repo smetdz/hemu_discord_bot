@@ -4,6 +4,7 @@ from discord.ext import commands
 from umongo import fields
 
 from bot import HemuBot
+from config import hemu_emoji
 from mongo_documents import Guild, Reaction
 
 
@@ -42,7 +43,7 @@ class ReactionCog(commands.Cog):
             self.bot.add_reaction(ctx.guild.name, string.lower(), reaction, is_emb)
             await ctx.send('Реакция была успешно создана.')
         except Exception as e:
-            await ctx.send('При создании реакции произошла ошибка, попробуйте еще раз.')
+            await ctx.send(f'При создании реакции произошла ошибка, попробуйте еще раз.{hemu_emoji["sad_hemu"]}')
             print(e)
 
     @reaction.command(name='remove', aliases=['del', 'delete'])
@@ -90,9 +91,9 @@ class ReactionCog(commands.Cog):
         await guild.commit()
 
         if prev_status:
-            message = 'Реакции выключены.'
+            message = f'Реакции выключены.{hemu_emoji["sad_hemu"]}'
         else:
-            message = 'Реакции включены.'
+            message = f'Реакции включены.{hemu_emoji["hemu_fun"]}'
 
         await ctx.send(message)
 

@@ -28,3 +28,8 @@ emoji_dict = {
    'sayaka': '<:Sayaka:723625132051923006>'
 }
 
+hemu_emoji = {
+   'sad_hemu': '<:HomHomu3:732892869282496602>',
+   'surprised_hemu': '<:HomHomu5:732893666363834379>',
+   'hemu_fun': '<:HomHomu7:732894496810860636>',
+}

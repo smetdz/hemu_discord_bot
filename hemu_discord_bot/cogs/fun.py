@@ -3,6 +3,7 @@ from discord.ext import commands
 from discord.utils import get
 
 import config
+from config import hemu_emoji
 
 
 class Fun(commands.Cog):
@@ -18,7 +19,8 @@ class Fun(commands.Cog):
                 user = get(ctx.guild.members, name=member)
 
                 if not user:
-                    await ctx.send(f'Не могу понять, что за пользователь этот твой "{member}", попробуй еще раз')
+                    await ctx.send(f'Не могу понять, что за пользователь этот твой "{member}",'
+                                   f' попробуй еще раз.{hemu_emoji["sad_hemu"]}')
                     return
         else:
             user = ctx.author
