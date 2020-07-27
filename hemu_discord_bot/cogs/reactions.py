@@ -1,10 +1,10 @@
 import discord
 from discord.ext import commands
 
-from mongo_documents import Guild, Reaction
 from umongo import fields
 
 from bot import HemuBot
+from mongo_documents import Guild, Reaction
 
 
 class ReactionCog(commands.Cog):
@@ -82,14 +82,14 @@ class ReactionCog(commands.Cog):
     async def switch_guild_reactions_status(self, ctx: commands.Context):
         guild = await Guild.find_one({'_id': ctx.guild.id})
 
-        current_status = guild.reactions_status
+        prev_status = guild.reactions_status
 
-        guild.reactions_status = not current_status
-        self.bot.guilds_reactions_status[ctx.guild.id] = not current_status
+        guild.reactions_status = not prev_status
+        self.bot.guilds_reactions_status[ctx.guild.id] = not prev_status
 
         await guild.commit()
 
-        if current_status:
+        if prev_status:
             message = 'Реакции выключены.'
         else:
             message = 'Реакции включены.'

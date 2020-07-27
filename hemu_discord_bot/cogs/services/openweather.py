@@ -37,15 +37,16 @@ class OpenWeatherRef:
         return None
 
     async def _get_weather_data(self, city: str) -> dict or None:
+        url = f'{self.API_URL}weather?'\
+              f'q={city}&'\
+              f'appid={os.environ["OPEN_WEATHER_KEY"]}&'\
+              f'lang=ru&'\
+              f'units=metric'
+
         async with aiohttp.ClientSession() as session:
-            response = await session.get(url=f'{self.API_URL}weather?'
-                                             f'q={city}&'
-                                             f'appid={os.environ["OPEN_WEATHER_KEY"]}&'
-                                             f'lang=ru&'
-                                             f'units=metric')
+            async with session.get(url=url) as response:
+                if response.status == 404:
+                    return
 
-        if response.status == 404:
-            return
-
-        return await response.json()
+                return await response.json()
 

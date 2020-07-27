@@ -28,11 +28,11 @@ class Reaction(Document):
 
 @instance.register
 class Channel(Document):
-    _id = fields.IntegerField(unique=True)
+    _id = fields.StrField(unique=True)
     title = fields.StrField()
-    notification_channel_id = fields.IntegerField()
-    notification_role_id = fields.IntegerField()
-    guild = fields.ReferenceField(document=Guild)
+    guilds = fields.ListField(fields.DictField(guild_id=fields.IntegerField(unique=True),
+                                               channel_id=fields.IntegerField(),
+                                               role_id=fields.IntegerField()))
 
     class Meta:
         abstract = True
@@ -48,7 +48,7 @@ class TwitchChannel(Channel):
 
 @instance.register
 class YouTubeChannel(Channel):
-    last_video_id = fields.IntegerField()
+    last_video_id = fields.StrField()
 
     class Meta:
         collection_name = 'youtube-channel'

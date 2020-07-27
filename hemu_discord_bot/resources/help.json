@@ -27,6 +27,36 @@
         "description": "Показывает текущую погоду в указанном населенном пункте.",
         "usage": "!погода [city]",
         "example": "!погода Санкт-Петербург"
+      },
+      "youtube": {
+        "name": "youtube",
+        "aliases": [],
+        "description": "Вызывайте с подкомандами 'add', 'remove', 'list'.\n Используйте !help youtube [имя подкоманды]",
+        "usage": "!youtube [sub command] [args]",
+        "example": "!youtube list",
+        "sub_commands": {
+          "add":{
+          "name": "add",
+          "aliases": ["добавить"],
+          "description": "Используйте если хотите получать уведомления о новых видео на ютуб канале.",
+          "usage": "!youtube add [channel] [text channel] [mention role] (последнее не обязательно)",
+          "example": "!youtube add \"Cletus Findlay\" #text channel @everyone"
+          },
+          "remove":{
+          "name": "remove",
+          "aliases": ["del, delete"],
+          "description": "Удаляет уведомления для ютуб канала.",
+          "usage": "!youtube remove [channel]",
+          "example": "!youtube remove YouTube Channel"
+          },
+          "list":{
+          "name": "list",
+          "aliases": ["lst, show"],
+          "description": "Показывает ютуб каналов.",
+          "usage": "!youtube list",
+            "example": "!youtube list"
+          }
+        }
       }
     }
   },

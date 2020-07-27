@@ -1,5 +1,4 @@
 import json
-import datetime
 import pathlib
 
 import discord
@@ -18,9 +17,8 @@ class Info(commands.Cog):
     @commands.command(name='роль', aliases=('role',))
     async def role_info(self, ctx: commands.Context, *, role_name: str = None):
         if role_name:
-            try:
-                role = list(ctx.message.role_mentions)[0]
-            except IndexError:
+            role = get(ctx.guild.roles, mention=role_name)
+            if not role:
                 role = get(ctx.guild.roles, name=role_name)
 
                 if not role:

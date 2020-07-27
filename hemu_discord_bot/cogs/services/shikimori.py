@@ -55,8 +55,8 @@ class ShikimoriRef:
         return self.info_types[info_type](logo_icon=f'{self.BASE_URL}/favicon.ico', **current_info)
 
     async def _get_data(self, session: aiohttp.ClientSession, end_url: str):
-        response = await session.get(url=f'{self.BASE_API_URL}{end_url}')
-        return await response.json()
+        async with session.get(url=f'{self.BASE_API_URL}{end_url}') as response:
+            return await response.json()
 
 
 class Title:
