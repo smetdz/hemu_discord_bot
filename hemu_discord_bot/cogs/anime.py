@@ -70,7 +70,8 @@ class TitleCog(commands.Cog):
             items_list = '\n'.join(info)
             emb = discord.Embed(title=f'{message_type[info_type]}:', colour=discord.Color.dark_purple(),
                                 description=f'{items_list}\n\n'
-                                            f'Вызови команду и напиши название полностью.')
+                                            f'Вызови команду и напиши название полностью'
+                                            f' {hemu_emoji["surprised_hemu"]}')
             await ctx.send(embed=emb)
             return
 
