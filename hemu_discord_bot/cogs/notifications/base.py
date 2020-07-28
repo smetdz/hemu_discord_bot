@@ -22,3 +22,4 @@ class YouTubeChannel(Channel):
         super().__init__(**kwargs)
 
         self.last_video_id = kwargs['last_video_id']
+        self.video_count = kwargs['video_count']

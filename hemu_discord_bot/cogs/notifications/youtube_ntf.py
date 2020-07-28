@@ -24,6 +24,7 @@ class YouTubeNotifier:
         c_dict = {
             'title': y_ch.title,
             'channel_id': y_ch.pk,
+            'video_count': y_ch.video_count,
             'last_video_id': y_ch.last_video_id,
             'guilds': [Guild(guild_id=guild['guild_id'], channel_id=guild['channel_id'], role_id=guild['role_id'])
                        for guild in guilds]
@@ -44,19 +45,20 @@ class YouTubeNotifier:
         await asyncio.sleep(20)
         self.get_last_video_ntf.start()
 
-    @tasks.loop(seconds=180)
+    @tasks.loop(seconds=300)
     async def get_last_video_ntf(self):
         for channel_title, c_channel in self.channels_dict.items():
-            last_video = await self.youtube.get_last_channel_video(c_channel.id)
+            c_video_count = await self.youtube.get_channel_video_count(c_channel.id)
 
-            print(last_video, channel_title)
-            print((datetime.now() - last_video.published_at).total_seconds())
+            if c_video_count != c_channel.video_count:
+                last_video = await self.youtube.get_last_channel_video(c_channel.id)
 
-            delay_s = (datetime.now() - last_video.published_at).total_seconds()
+                delay_s = (datetime.now() - last_video.published_at).total_seconds()
 
-            if c_channel.last_video_id != last_video.id and delay_s < 1200:
-                self.bot.loop.create_task(self.notify_about_new_video(channel_title, c_channel.guilds, last_video))
-                self.bot.loop.create_task(self.update_channel_last_video(channel_title, last_video))
+                if c_channel.last_video_id != last_video.id and delay_s < 1200:
+                    self.bot.loop.create_task(self.notify_about_new_video(channel_title, c_channel.guilds, last_video))
+
+                self.bot.loop.create_task(self.update_channel_last_video(channel_title, last_video, c_video_count))
 
     async def notify_about_new_video(self, channel_title: str, guilds: list, video: YouTubeVideo):
         for item in guilds:
@@ -72,12 +74,14 @@ class YouTubeNotifier:
             await channel.send(f'{str(role_mention + ", н") if role_mention else "Н"}'
                                f'а канале **{channel_title}** появилось новое видео!\n{video.video_url}')
 
-    async def update_channel_last_video(self, channel_title: str, new_video: YouTubeVideo):
+    async def update_channel_last_video(self, channel_title: str, new_video: YouTubeVideo, new_video_count: int):
         channel = await YouTubeChannelDoc.find_one({'_id': self.channels_dict[channel_title].id})
         channel.last_video_id = new_video.id
+        channel.video_count = new_video_count
         await channel.commit()
 
         self.channels_dict[channel_title].last_video_id = new_video.id
+        self.channels_dict[channel_title].video_count = new_video_count
 
     async def add_to_channel(self, data: dict):
         try:
@@ -105,6 +109,7 @@ class YouTubeNotifier:
 
     async def add_new_channel(self, y_ch: YouTubeChannelRef, data: dict):
         doc_channel = YouTubeChannelDoc(_id=y_ch.channel_id, title=y_ch.title,
+                                        video_count=y_ch.video_count,
                                         last_video_id=y_ch.last_video.id,
                                         guilds=[fields.Dict(guild_id=data['guild_id'],
                                                             channel_id=data['channel'],

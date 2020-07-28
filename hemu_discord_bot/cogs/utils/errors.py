@@ -16,3 +16,7 @@ class VideoDoesNotExist(Exception):
 
 class ChannelDoesNotExist(Exception):
     pass
+
+
+class QuotasAreOver(Exception):
+    pass

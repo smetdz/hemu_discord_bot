@@ -66,7 +66,8 @@ if __name__ == '__main__':
     paths = list(Path.rglob('*.py'))
 
     modules = [str(path).split("/")[-1].strip('.py')
-               for path in paths if not any(['services' in str(path), 'utils' in str(path)])]
+               for path in paths if not any(list(map(lambda s: s in str(path),
+                                                     ['services', 'utils', 'notifications'])))]
     extensions = [f'cogs.{module}' for module in modules]
     print(extensions)
 

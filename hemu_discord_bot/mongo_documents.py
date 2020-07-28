@@ -49,6 +49,7 @@ class TwitchChannel(Channel):
 @instance.register
 class YouTubeChannel(Channel):
     last_video_id = fields.StrField()
+    video_count = fields.IntegerField()
 
     class Meta:
         collection_name = 'youtube-channel'
