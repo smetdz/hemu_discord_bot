@@ -36,7 +36,10 @@ class TwitchNotifier:
 
                     if self._stream_status:
                         twitch_emb = self.create_twitch_embed(channel_data, user_data, False)
-                        await message.edit(content='', embed=twitch_emb)
+                        try:
+                            await message.edit(content='', embed=twitch_emb)
+                        except Exception as e:
+                            print(e)
                         await channel.send('Стрим закончился')
                     else:
                         twitch_emb = self.create_twitch_embed(channel_data, user_data)
