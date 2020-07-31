@@ -16,12 +16,25 @@ class Fun(commands.Cog):
             try:
                 user = list(ctx.message.mentions)[0]
             except IndexError:
-                user = get(ctx.guild.members, name=member)
+                user = None
+                fields = ['name', 'display_name', 'id']
 
-                if not user:
-                    await ctx.send(f'Не могу понять, что за пользователь этот твой "{member}",'
-                                   f' попробуй еще раз.{hemu_emoji["sad_hemu"]}')
-                    return
+                for field in fields:
+                    if field == 'id':
+                        try:
+                            user = get(ctx.guild.members, **{field: int(member)})
+                        except ValueError:
+                            pass
+                    else:
+                        user = get(ctx.guild.members, **{field: member})
+
+                    if user:
+                        break
+
+            if not user:
+                await ctx.send(f'Не могу понять, что за пользователь этот твой "{member}",'
+                               f' попробуй еще раз.{hemu_emoji["sad_hemu"]}')
+                return
         else:
             user = ctx.author
 

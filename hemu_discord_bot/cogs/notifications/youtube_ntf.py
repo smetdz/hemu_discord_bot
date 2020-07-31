@@ -50,6 +50,8 @@ class YouTubeNotifier:
         for channel_title, c_channel in self.channels_dict.items():
             c_video_count = await self.youtube.get_channel_video_count(c_channel.id)
 
+            print(channel_title, c_video_count)
+
             if c_video_count != c_channel.video_count:
                 last_video = await self.youtube.get_last_channel_video(c_channel.id)
 
