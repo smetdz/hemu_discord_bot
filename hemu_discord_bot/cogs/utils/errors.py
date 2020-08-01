@@ -20,3 +20,11 @@ class ChannelDoesNotExist(Exception):
 
 class QuotasAreOver(Exception):
     pass
+
+
+class TagAlreadyExists(Exception):
+    pass
+
+
+class InvalidUser(Exception):
+    pass

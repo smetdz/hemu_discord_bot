@@ -44,17 +44,93 @@
           },
           "remove":{
           "name": "remove",
-          "aliases": ["del, delete"],
+          "aliases": ["del", "delete"],
           "description": "Удаляет уведомления для ютуб канала.",
           "usage": "!youtube remove [channel]",
           "example": "!youtube remove YouTube Channel"
           },
           "list":{
           "name": "list",
-          "aliases": ["lst, show"],
-          "description": "Показывает ютуб каналов.",
+          "aliases": ["lst", "show"],
+          "description": "Показывает список ютуб каналов.",
           "usage": "!youtube list",
             "example": "!youtube list"
+          }
+        }
+      }
+    }
+  },
+  {
+    "cog_name": "Инструменты",
+    "commands": {
+      "tag": {
+        "name": "tag",
+        "aliases": [],
+        "description": "Вызывайте с подкомандами 'add', 'remove', 'list', 'show', 'edit', 'all'.\n Используйте !help tag [имя подкоманды]",
+        "usage": "!tag [sub command] [args]",
+        "example": "!tag list",
+        "sub_commands": {
+          "create": {
+            "name": "create",
+            "aliases": [
+              "создать",
+              "add"
+            ],
+            "description": "Создает новый тег.",
+            "usage": "!tag create [tag_name] [tag_text]",
+            "example": "!tag create \"Madoka Magika\" one of the best anime I've ever seen"
+          },
+          "remove": {
+            "name": "remove",
+            "aliases": [
+              "del",
+              "delete",
+              "dlt",
+              "удалить"
+            ],
+            "description": "Удаляет тег.",
+            "usage": "!tag remove [tag_name]",
+            "example": "!tag remove tagname"
+          },
+          "edit": {
+            "name": "edit",
+            "aliases": [
+              "изменить"
+            ],
+            "description": "Изменяет содержимое указанного тега.",
+            "usage": "!tag edit [tag_name] [new_text]",
+            "example": "!tag edit \"tag name\" new tag text"
+          },
+          "list": {
+            "name": "list",
+            "aliases": [
+              "lst",
+              "список"
+            ],
+            "description": "Показывает теги созданные вами.",
+            "usage": "!tag list",
+            "example": "!tag list"
+          },
+          "show": {
+            "name": "show",
+            "aliases": [],
+            "description": "Показывет содержимое тега.",
+            "usage": "!tag show [tag_name]",
+            "example": "!tag show tagname"
+          },
+          "usertag": {
+            "name": "usertag",
+            "aliases": [],
+            "description": "Показывет содержимое тега созданного указанным пользователем.",
+            "usage": "!tag usertag [username] [tag_name]",
+            "example": "!tag usertag \"user name\" tag name"
+          },
+          "all": {
+            "name": "all",
+            "aliases": [],
+            "description": "Показывет все теги на сервере.",
+            "usage": "!tag all",
+            "example": "!tag all"
           }
         }
       }

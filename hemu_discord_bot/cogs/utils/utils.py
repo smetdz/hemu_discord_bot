@@ -27,3 +27,26 @@ def get_text_channel(ctx: commands.Context, channel_name: str):
             raise errors.InvalidTextChannel
 
     return txt_channel
+
+
+def get_member(ctx: commands.Context, member: str):
+    try:
+        user = list(ctx.message.mentions)[0]
+        return user
+    except IndexError:
+        user = None
+        fields = ['name', 'display_name', 'id']
+
+        for field in fields:
+            if field == 'id':
+                try:
+                    user = get(ctx.guild.members, **{field: int(member)})
+                except ValueError:
+                    pass
+            else:
+                user = get(ctx.guild.members, **{field: member})
+
+            if user:
+                return user
+
+    raise errors.InvalidUser

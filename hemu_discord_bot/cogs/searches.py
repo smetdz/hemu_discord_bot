@@ -19,10 +19,7 @@ class Searches(commands.Cog):
 
     @commands.group(name='youtube', invoke_without_command=True)
     async def youtube(self, ctx: commands.Context):
-        s = ''
-        for key, item in self.youtube_notifier.channels_dict.items():
-            s += f'{key} : {item}\n'
-        await ctx.send(s)
+        pass
 
     @youtube.command(name='list', aliases=('lst', 'show'))
     async def show_ntf_channels_list(self, ctx: commands.Context):

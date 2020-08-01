@@ -3,6 +3,8 @@ from discord.ext import commands
 from discord.utils import get
 
 import config
+from cogs.utils.utils import get_member
+from cogs.utils import errors
 from config import hemu_emoji
 
 
@@ -14,24 +16,8 @@ class Fun(commands.Cog):
     async def avatar(self, ctx: commands.Context, *, member: str = None):
         if member:
             try:
-                user = list(ctx.message.mentions)[0]
-            except IndexError:
-                user = None
-                fields = ['name', 'display_name', 'id']
-
-                for field in fields:
-                    if field == 'id':
-                        try:
-                            user = get(ctx.guild.members, **{field: int(member)})
-                        except ValueError:
-                            pass
-                    else:
-                        user = get(ctx.guild.members, **{field: member})
-
-                    if user:
-                        break
-
-            if not user:
+                user = get_member(ctx, member)
+            except errors.InvalidUser:
                 await ctx.send(f'Не могу понять, что за пользователь этот твой "{member}",'
                                f' попробуй еще раз.{hemu_emoji["sad_hemu"]}')
                 return

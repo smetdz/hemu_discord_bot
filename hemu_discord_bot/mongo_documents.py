@@ -16,6 +16,17 @@ class Guild(Document):
 
 
 @instance.register
+class Tag(Document):
+    name = fields.StrField()
+    text = fields.StrField()
+    guild = fields.ReferenceField(document=Guild)
+    user_id = fields.IntegerField()
+
+    class Meta:
+        collection_name = 'tag'
+
+
+@instance.register
 class Reaction(Document):
     string = fields.StrField(attribute='_id', unique=True)
     reaction = fields.StrField()
