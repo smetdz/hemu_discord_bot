@@ -63,7 +63,7 @@ class Tools(commands.Cog):
         f_dict = {'guild': guild_id} if all_tags else {'user_id': user_id, 'guild': guild_id}
 
         tags_ = Tag.find(f_dict)
-        count = await Tag.count_documents({'user_id': user_id, 'guild': guild_id})
+        count = await Tag.count_documents({'guild': guild_id})
         return await tags_.to_list(count)
 
     @tag.command(name='create', aliases=('создать', 'add',))
@@ -100,18 +100,28 @@ class Tools(commands.Cog):
         if tag:
             tag.text = new_tag_text
             await tag.commit()
-            await ctx.send(f'Содержимое тега {tag_name} изменено.')
+            await ctx.send(f'Содержимое тега "{tag_name}" изменено.')
             return
 
         tag_list = await self.search_tag(ctx.author.id, ctx.guild.id, tag_name)
         await self.return_tag_list(ctx, tag_name, tag_list)
 
     @tag.command(name='list', aliases=('lst', 'список',))
-    async def show_tags_list(self, ctx: commands.Context):
-        tags = await self.get_tags(ctx.author.id, ctx.guild.id)
+    async def show_tags_list(self, ctx: commands.Context, *, user: str = None):
+        if user:
+            try:
+                member = get_member(ctx, user)
+            except errors.InvalidUser:
+                await ctx.send(f'Не могу понять, что за пользователь этот твой "{user}",'
+                               f' попробуй еще раз. {hemu_emoji["sad_hemu"]}')
+                return
+        else:
+            member = ctx.author
+
+        tags = await self.get_tags(member.id, ctx.guild.id)
 
         if tags:
-            emb = discord.Embed(title=f'Теги пользователя {ctx.author}:',
+            emb = discord.Embed(title=f'Теги пользователя {member}:',
                                 colour=discord.Colour.dark_purple(),
                                 description=', '.join([f'{tag.name}' for tag in tags]))
             await ctx.send(embed=emb)
@@ -120,7 +130,6 @@ class Tools(commands.Cog):
         await ctx.send(f'Нет тегов {hemu_emoji["sad_hemu"]}')
 
     @tag.command(name='all', aliases=('все',))
-    @commands.has_permissions(administrator=True)
     async def show_all_tags(self, ctx: commands.Context):
         tags = await self.get_tags(ctx.author.id, ctx.guild.id, True)
 
