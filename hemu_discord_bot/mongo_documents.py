@@ -14,6 +14,17 @@ class Guild(Document):
     class Meta:
         collection_name = 'guild'
 
+@instance.register
+class AutoRole(Document):
+    _id = fields.IntegerField(unique=True)
+    delay = fields.IntegerField()
+    active_auto_role = fields.ListField(fields.DictField(user_id=fields.IntegerField(),
+                                                         date_of_accession=fields.DateTimeField()))
+    guild = fields.ReferenceField(document=Guild)
+
+    class Meta:
+        collection_name = 'autorole'
+
 
 @instance.register
 class Tag(Document):

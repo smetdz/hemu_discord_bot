@@ -1,3 +1,5 @@
+import re
+
 from discord.utils import get
 from discord.ext import commands
 
@@ -50,3 +52,19 @@ def get_member(ctx: commands.Context, member: str):
                 return user
 
     raise errors.InvalidUser
+
+
+def get_delay(delay_str: str):
+    res = re.findall(r'\d+d|\d+h|\d+m', delay_str)
+
+    if ''.join(res) != delay_str:
+        raise errors.InvalidDelay
+
+    delay_dict = {'d': 86400, 'h': 3600, 'm': 60}
+
+    delay = 0
+    for r in res:
+        delay += int(r[:-1]) * delay_dict[r[-1]]
+
+    return delay
+

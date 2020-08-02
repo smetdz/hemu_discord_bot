@@ -28,3 +28,7 @@ class TagAlreadyExists(Exception):
 
 class InvalidUser(Exception):
     pass
+
+
+class InvalidDelay(Exception):
+    pass

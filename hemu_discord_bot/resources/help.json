@@ -107,9 +107,9 @@
               "lst",
               "список"
             ],
-            "description": "Показывает теги созданные вами.",
-            "usage": "!tag list",
-            "example": "!tag list"
+            "description": "Показывает теги созданные вами или указанным пользователем.",
+            "usage": "!tag list [user]",
+            "example": "!tag list username"
           },
           "show": {
             "name": "show",
@@ -172,19 +172,54 @@
   {
     "cog_name": "Инфо",
     "commands": {
-      "роль":{
-        "name": "роль",
-        "aliases": ["role"],
-        "description": "Показывает всех пользователей с указанной ролью.",
-        "usage": "!роль [role]",
-        "example": "!роль @role"
-      },
       "help":{
         "name": "help",
         "aliases": ["commands", "h", "cmds"],
         "description": "Показывает список команд.\nЧтобы получить информацию о выбранной команде используте `!help [command]`",
         "usage": "!help [command]",
         "example": "!help аниме"
+      }
+    }
+  },
+  {
+    "cog_name": "Роли",
+    "commands": {
+      "autorole": {
+        "name": "autorole",
+        "aliases": [],
+        "description": "Вызывайте с подкомандами 'add', 'remove', 'list'.\n Используйте !help autorole [имя подкоманды]",
+        "usage": "!autorole [sub command] [args]",
+        "example": "!autorole list",
+        "sub_commands": {
+          "add":{
+          "name": "add",
+          "aliases": [],
+          "description": "Создает автороль на сервере.",
+          "usage": "!autorole add [role] [delay] \nПоследний параметр по умолчанию 0, использовать в виде [num]d[num]h[num]m.",
+          "example": "!autorole add role 7d4h"
+          },
+          "remove":{
+          "name": "remove",
+          "aliases": [],
+          "description": "Удаляет уже существующую автороль.",
+          "usage": "!autorole remove [role]",
+          "example": "!autorole remove role"
+          },
+          "list":{
+          "name": "list",
+          "aliases": [],
+          "description": "Показывает список авторолей.",
+          "usage": "!autorole list",
+            "example": "!autorole list"
+          }
+        }
+      },
+      "роль":{
+        "name": "роль",
+        "aliases": ["role"],
+        "description": "Показывает всех пользователей с указанной ролью.",
+        "usage": "!роль [role]",
+        "example": "!роль @role"
       }
     }
   },

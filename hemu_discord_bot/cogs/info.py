@@ -14,22 +14,6 @@ class Info(commands.Cog):
     def __init__(self, bot: HemuBot):
         self.bot = bot
 
-    @commands.command(name='роль', aliases=('role',))
-    async def role_info(self, ctx: commands.Context, *, role_name: str = None):
-        if role_name:
-            role = get(ctx.guild.roles, mention=role_name)
-            if not role:
-                role = get(ctx.guild.roles, name=role_name)
-
-                if not role:
-                    await ctx.send(f'Роли "{role_name}" нет на сервере, попробуй еще раз. {hemu_emoji["sad_hemu"]}')
-                    return
-
-            role_emb = discord.Embed(title=f'Пользователи с ролью {role.name}', colour=role.colour,
-                                     description=', '.join([member.name for member in role.members]))
-
-            await ctx.send(embed=role_emb)
-
     @commands.command(name='help', aliases=('h', 'cmds', 'commands'))
     async def help(self, ctx: commands.Context, command_name: str = None, sub_command: str = None):
         path = pathlib.Path('hemu_discord_bot/resources/help.json')
