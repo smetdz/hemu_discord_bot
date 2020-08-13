@@ -46,7 +46,7 @@ class Tools(commands.Cog):
         if tag_list:
             emb = discord.Embed(title=f'Не могу найти тег {tag_name}, похожее:',
                                 colour=discord.Colour.dark_purple(),
-                                description=', '.join(tag_list))
+                                description='\n'.join(f'**{ind + 1}.** {tag}' for ind, tag in enumerate(tag_list)))
             await ctx.send(embed=emb)
             return
 
@@ -123,7 +123,7 @@ class Tools(commands.Cog):
         if tags:
             emb = discord.Embed(title=f'Теги пользователя {member}:',
                                 colour=discord.Colour.dark_purple(),
-                                description=', '.join([f'{tag.name}' for tag in tags]))
+                                description='\n'.join([f'**{ind + 1}.** {tag.name}' for ind, tag in enumerate(tags)]))
             await ctx.send(embed=emb)
             return
 
