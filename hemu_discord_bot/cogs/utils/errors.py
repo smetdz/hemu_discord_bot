@@ -32,3 +32,7 @@ class InvalidUser(Exception):
 
 class InvalidDelay(Exception):
     pass
+
+
+class InvalidPoll(Exception):
+    pass

@@ -1,18 +1,82 @@
+import asyncio
+
 import discord
 from discord.ext import commands
-
 from umongo import fields
 
 from bot import HemuBot
+from cogs.utils.poll import Poll
 from cogs.utils import errors
-from cogs.utils.utils import get_member
-from config import hemu_emoji
+from cogs.utils.utils import get_member, get_role, get_delay
+from config import hemu_emoji, poll_options_emoji, base_poll_duration
 from mongo_documents import Tag, Guild
 
 
 class Tools(commands.Cog):
     def __init__(self, bot: HemuBot):
         self.bot = bot
+
+    @commands.command(name='poll', aliases=('голосование',))
+    async def poll(self, ctx: commands.Context, poll_title: str, role_name: str, duration_str: str, *emoji_options):
+        if role_name in ['нет', 'not', '-']:
+            role_mention = ''
+        else:
+            if ctx.author.guild_permissions.administrator:
+                if role_name in ['@everyone', '@here']:
+                    role_mention = role_name
+                else:
+                    try:
+                        role_mention = get_role(ctx, role_name).mention
+                    except errors.InvalidRole:
+                        await ctx.send(f'Роли "{role_name}" нет на сервере, попробуй еще раз.{hemu_emoji["sad_hemu"]}')
+                        return
+            else:
+                await ctx.send('Только пользователи с правами администатора могут пинговать роли. Вызовите команду '
+                               'используя в качестве роли нет/not/-.')
+                return
+
+        if duration_str in ['нет', 'not', '-']:
+            duration = base_poll_duration
+        else:
+            try:
+                duration = get_delay(duration_str)
+            except errors.InvalidDelay:
+                await ctx.send(f'Не могу понять сколько это "{duration_str}" попробуй еще раз.{hemu_emoji["sad_hemu"]}')
+                return
+
+        if not len(emoji_options) % 2:
+            option_for_votes = tuple(zip(emoji_options[::2], emoji_options[1::2]))
+
+            poll = Poll(poll_title, option_for_votes, ctx.author, role_mention)
+            self.bot.loop.create_task(self.process_poll(ctx, poll, duration))
+            return
+
+        await ctx.send(f'Не получилось, попробуй еще раз {hemu_emoji["sad_hemu"]}')
+
+    @commands.command(name='spoll', aliases=('простголос', ))
+    async def simple_poll(self, ctx: commands.Context, title: str, *options):
+        if options:
+            options_for_votes = tuple(zip(poll_options_emoji, options))
+        else:
+            options_for_votes = tuple(zip((hemu_emoji['hemu_fun'], hemu_emoji['sad_hemu']), ('Да', 'Нет')))
+
+        poll = Poll(title, options_for_votes, ctx.author, '')
+        self.bot.loop.create_task(self.process_poll(ctx, poll, base_poll_duration))
+
+    async def process_poll(self, ctx: commands.Context, poll: Poll, duration: int):
+        try:
+            message_id = await poll.create_poll(ctx.channel)
+        except errors.InvalidPoll:
+            await ctx.send(f'Неправильные эмодзи {hemu_emoji["sad_hemu"]}')
+            return
+
+        self.bot.polls[message_id] = poll
+        await ctx.message.delete()
+
+        await asyncio.sleep(duration)
+        await poll.close_poll()
+
+        self.bot.polls.pop(message_id)
 
     @commands.group(name='tag')
     async def tag(self, ctx: commands.Context):

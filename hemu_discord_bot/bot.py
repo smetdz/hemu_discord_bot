@@ -15,6 +15,7 @@ class HemuBot(commands.Bot):
     db = None
     guilds_reactions = None
     guilds_reactions_status = None
+    polls = {}
     reaction_tuple = namedtuple('rct', 'rct is_emb')
 
     async def on_ready(self):

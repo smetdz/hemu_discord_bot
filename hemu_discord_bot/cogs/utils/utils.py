@@ -55,12 +55,13 @@ def get_member(ctx: commands.Context, member: str):
 
 
 def get_delay(delay_str: str):
-    res = re.findall(r'\d+d|\d+h|\d+m', delay_str)
+    res = re.findall(r'\d+d|\d+h|\d+m|\d+s|\d+д|\d+ч|\d+м|\d+с', delay_str)
 
     if ''.join(res) != delay_str:
         raise errors.InvalidDelay
 
-    delay_dict = {'d': 86400, 'h': 3600, 'm': 60}
+    delay_dict = {'d': 86400, 'h': 3600, 'm': 60, 's': 1,
+                  'д': 86400, 'ч': 3600, 'м': 60, 'с': 1, }
 
     delay = 0
     for r in res:

@@ -30,6 +30,28 @@ class Events(commands.Cog):
         if self.bot.guilds_reactions_status[message.guild.id]:
             await self.reactions_on_message(message)
 
+    @commands.Cog.listener()
+    async def on_reaction_add(self, reaction: discord.Reaction, user: discord.User):
+        if user == self.bot.user:
+            return
+
+        if self.bot.polls:
+            try:
+                await self.bot.polls[reaction.message.id].update_poll(user, reaction)
+            except KeyError:
+                pass
+
+    @commands.Cog.listener()
+    async def on_reaction_remove(self, reaction: discord.Reaction, user: discord.User):
+        if user == self.bot.user:
+            return
+
+        if self.bot.polls:
+            try:
+                await self.bot.polls[reaction.message.id].update_poll(user, reaction, False)
+            except KeyError:
+                pass
+
     async def reactions_on_message(self, message: discord.Message):
         for string, reaction in self.bot.guilds_reactions[message.guild.name].items():
             if string.lower() in message.content.lower():
