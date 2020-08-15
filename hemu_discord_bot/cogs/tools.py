@@ -54,14 +54,23 @@ class Tools(commands.Cog):
         await ctx.send(f'Не получилось, попробуй еще раз {hemu_emoji["sad_hemu"]}')
 
     @commands.command(name='spoll', aliases=('простголос', ))
-    async def simple_poll(self, ctx: commands.Context, title: str, *options):
+    async def simple_poll(self, ctx: commands.Context, title: str,  duration_str: str = None, *options):
         if options:
             options_for_votes = tuple(zip(poll_options_emoji, options))
         else:
             options_for_votes = tuple(zip((hemu_emoji['hemu_fun'], hemu_emoji['sad_hemu']), ('Да', 'Нет')))
 
+        if duration_str in ['нет', 'not', '-']:
+            duration = base_poll_duration
+        else:
+            try:
+                duration = get_delay(duration_str)
+            except errors.InvalidDelay:
+                await ctx.send(f'Не могу понять сколько это "{duration_str}" попробуй еще раз.{hemu_emoji["sad_hemu"]}')
+                return
+
         poll = Poll(title, options_for_votes, ctx.author, '')
-        self.bot.loop.create_task(self.process_poll(ctx, poll, base_poll_duration))
+        self.bot.loop.create_task(self.process_poll(ctx, poll, duration))
 
     async def process_poll(self, ctx: commands.Context, poll: Poll, duration: int):
         try:
