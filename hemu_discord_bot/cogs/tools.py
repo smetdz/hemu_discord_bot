@@ -60,7 +60,7 @@ class Tools(commands.Cog):
         else:
             options_for_votes = tuple(zip((hemu_emoji['hemu_fun'], hemu_emoji['sad_hemu']), ('Да', 'Нет')))
 
-        if duration_str in ['нет', 'not', '-']:
+        if duration_str in ['нет', 'not', '-', None]:
             duration = base_poll_duration
         else:
             try:
