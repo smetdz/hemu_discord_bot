@@ -98,13 +98,13 @@ class Poll:
         winners = list(filter(lambda opt: opt.count == max_vote_count, list(self.options_for_voting.values())))
 
         if len(winners) == 1:
-            await self.message.channel.send(f'Голосование завершено,'
+            await self.message.channel.send(f'Голосование "**{self.poll_title}**" завершено,'
                                             f' вариант набравший наибольшее кол-во голосов:'
                                             f'\n- {winners[0].description}')
         else:
             print(winners)
             opts = '\n'.join([f'- {win.description}' for win in winners])
-            await self.message.channel.send(f'Голосование завершено,'
+            await self.message.channel.send(f'Голосование "**{self.poll_title}**" завершено,'
                                             f' варианты набравшие наибольшее кол-во голосов: \n{opts}')
 
     def create_poll_emb(self) -> discord.Embed:
