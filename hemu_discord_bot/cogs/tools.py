@@ -1,4 +1,5 @@
 import asyncio
+import datetime
 
 import discord
 from discord.ext import commands
@@ -9,12 +10,13 @@ from cogs.utils.poll import Poll
 from cogs.utils import errors
 from cogs.utils.utils import get_member, get_role, get_delay
 from config import hemu_emoji, poll_options_emoji, base_poll_duration
-from mongo_documents import Tag, Guild
+from mongo_documents import Tag, Guild, Poll as DocumentPoll
 
 
 class Tools(commands.Cog):
     def __init__(self, bot: HemuBot):
         self.bot = bot
+        self.bot.loop.create_task(self.load_pools_from_bd())
 
     @commands.command(name='poll', aliases=('голосование',))
     async def poll(self, ctx: commands.Context, poll_title: str, role_name: str, duration_str: str, *emoji_options):
@@ -48,13 +50,13 @@ class Tools(commands.Cog):
             option_for_votes = tuple(zip(emoji_options[::2], emoji_options[1::2]))
 
             poll = Poll(poll_title, option_for_votes, ctx.author, role_mention)
-            self.bot.loop.create_task(self.process_poll(ctx, poll, duration))
+            self.bot.loop.create_task(self.process_poll(poll, duration, option_for_votes, ctx.channel, ctx.message))
             return
 
         await ctx.send(f'Не получилось, попробуй еще раз {hemu_emoji["sad_hemu"]}')
 
-    @commands.command(name='spoll', aliases=('простголос', ))
-    async def simple_poll(self, ctx: commands.Context, title: str,  duration_str: str = None, *options):
+    @commands.command(name='simplepoll', aliases=('простголос',))
+    async def simple_poll(self, ctx: commands.Context, title: str, duration_str: str = None, *options):
         if options:
             options_for_votes = tuple(zip(poll_options_emoji, options))
         else:
@@ -70,22 +72,66 @@ class Tools(commands.Cog):
                 return
 
         poll = Poll(title, options_for_votes, ctx.author, '')
-        self.bot.loop.create_task(self.process_poll(ctx, poll, duration))
+        self.bot.loop.create_task(self.process_poll(poll, duration, options_for_votes, ctx.channel, ctx.message))
 
-    async def process_poll(self, ctx: commands.Context, poll: Poll, duration: int):
+    async def process_poll(self, poll: Poll, duration: int, options: tuple = None, channel: discord.TextChannel = None,
+                           user_message: discord.Message = None, new_poll: bool = True):
         try:
-            message_id = await poll.create_poll(ctx.channel)
+            if new_poll:
+                message_id = await poll.create_poll(channel)
+                self.bot.loop.create_task(self.save_poll_to_bd(poll, duration, options))
+            else:
+                message_id = await poll.resume_poll()
         except errors.InvalidPoll:
-            await ctx.send(f'Неправильные эмодзи {hemu_emoji["sad_hemu"]}')
+            await channel.send(f'Неправильные эмодзи {hemu_emoji["sad_hemu"]}')
+            return
+        except Exception as e:
+            print(e)
             return
 
         self.bot.polls[message_id] = poll
-        await ctx.message.delete()
+
+        if new_poll:
+            await user_message.delete()
 
         await asyncio.sleep(duration)
         await poll.close_poll()
 
         self.bot.polls.pop(message_id)
+
+        d_poll = await DocumentPoll.find_one({'_id': message_id})
+        await d_poll.remove()
+
+    @staticmethod
+    async def save_poll_to_bd(poll: Poll, duration: int, options: tuple):
+        poll = DocumentPoll(
+            _id=poll.message.id,
+            creator_id=poll.creator.id,
+            channel_id=poll.message.channel.id,
+            title=poll.poll_title,
+            mention_role=poll.mention_role,
+            duration=duration,
+            options_for_voting=[list(opt) for opt in options]
+        )
+
+        await poll.commit()
+
+    async def load_pools_from_bd(self):
+        d_polls_ = DocumentPoll.find()
+        count = await DocumentPoll.count_documents()
+        d_polls = await d_polls_.to_list(count)
+
+        await asyncio.sleep(15)
+
+        for d_poll in d_polls:
+            channel = self.bot.get_channel(d_poll.channel_id)
+            message = await channel.fetch_message(d_poll.pk)
+            creator = self.bot.get_user(d_poll.creator_id)
+            options_for_voting = tuple(tuple(lst) for lst in d_poll.options_for_voting)
+            poll = Poll(d_poll.title, options_for_voting, creator, d_poll.mention_role, message)
+
+            duration = d_poll.duration - int((datetime.datetime.now() - message.created_at).total_seconds())
+            self.bot.loop.create_task(self.process_poll(poll, duration, new_poll=False))
 
     @commands.group(name='tag')
     async def tag(self, ctx: commands.Context):

@@ -31,24 +31,25 @@ class Events(commands.Cog):
             await self.reactions_on_message(message)
 
     @commands.Cog.listener()
-    async def on_reaction_add(self, reaction: discord.Reaction, user: discord.User):
-        if user == self.bot.user:
+    async def on_raw_reaction_add(self, payload: discord.RawReactionActionEvent):
+        if payload.user_id == config.HEMU_ID:
             return
 
         if self.bot.polls:
             try:
-                await self.bot.polls[reaction.message.id].update_poll(user, reaction)
+                await self.bot.polls[payload.message_id].update_poll(self.bot.get_user(payload.user_id), payload.emoji)
             except KeyError:
                 pass
 
     @commands.Cog.listener()
-    async def on_reaction_remove(self, reaction: discord.Reaction, user: discord.User):
-        if user == self.bot.user:
+    async def on_raw_reaction_remove(self, payload: discord.RawReactionActionEvent):
+        if payload.user_id == config.HEMU_ID:
             return
 
         if self.bot.polls:
             try:
-                await self.bot.polls[reaction.message.id].update_poll(user, reaction, False)
+                await self.bot.polls[payload.message_id].update_poll(self.bot.get_user(payload.user_id),
+                                                                     payload.emoji, False)
             except KeyError:
                 pass
 

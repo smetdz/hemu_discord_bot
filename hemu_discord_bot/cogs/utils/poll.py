@@ -3,7 +3,7 @@ import asyncio
 
 import discord
 
-from config import poll_emoji
+from config import poll_emoji, HEMU_ID
 from cogs.utils.errors import InvalidPoll
 
 
@@ -15,14 +15,14 @@ class Option:
 
 class Poll:
     def __init__(self, poll_title: str, option_for_votes: tuple, creator: discord.Member,
-                 mention_role: str):
+                 mention_role: str, message: discord.Message = None):
         self.poll_title = poll_title
         self.options_for_voting = self.create_options_dict(option_for_votes)
         self.creator = creator
         self.mention_role = mention_role
         self.who_voted = []
         self.number_of_voters = 0
-        self.message = None
+        self.message = message
         self.timestamp = None
         self.removed_reactions = []
         self.async_lock = asyncio.Lock()
@@ -47,24 +47,42 @@ class Poll:
 
         return self.message.id
 
-    async def update_poll(self, user: discord.User, reaction: discord.Reaction, on_add: bool = True):
+    async def resume_poll(self):
+        for reaction in self.message.reactions:
+            async for user in reaction.users():
+                if user.id not in self.who_voted and user.id != HEMU_ID:
+                    self.who_voted.append(user.id)
+                    self.options_for_voting[str(reaction.emoji)].count += 1
+                    self.number_of_voters += 1
+                elif user.id == HEMU_ID:
+                    continue
+                else:
+                    await reaction.remove(user)
+
+        self.timestamp = self.message.created_at
+        poll_emb = self.create_poll_emb()
+        await self.message.edit(embed=poll_emb)
+
+        return self.message.id
+
+    async def update_poll(self, user: discord.User, emoji: discord.Emoji, on_add: bool = True):
         async with self.async_lock:
             if not on_add:
-                if (user, reaction) in self.removed_reactions:
-                    self.removed_reactions.remove((user, reaction))
+                if (user, emoji) in self.removed_reactions:
+                    self.removed_reactions.remove((user, emoji))
                     return
 
-            if on_add and user.id in self.who_voted or str(reaction.emoji) not in self.options_for_voting.keys():
-                await reaction.remove(user)
-                self.removed_reactions.append((user, reaction))
+            if on_add and user.id in self.who_voted or str(emoji) not in self.options_for_voting.keys():
+                await self.message.remove_reaction(emoji, user)
+                self.removed_reactions.append((user, emoji))
                 return
 
             if on_add:
-                self.options_for_voting[str(reaction.emoji)].count += 1
+                self.options_for_voting[str(emoji)].count += 1
                 self.number_of_voters += 1
                 self.who_voted.append(user.id)
             else:
-                self.options_for_voting[str(reaction.emoji)].count -= 1
+                self.options_for_voting[str(emoji)].count -= 1
                 self.number_of_voters -= 1
                 self.who_voted.remove(user.id)
 

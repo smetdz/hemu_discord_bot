@@ -2,6 +2,7 @@ MODER_ROLE = 677842991649652756
 HEMU_ROLE = 725103351301275691
 CREATOR_ID = 460542537011036161
 TWITCH_CLIENT_ID = '6vg5fnmrs4hmj3bfo1kjxijr4lbxng'
+HEMU_ID = 724400359866368039
 
 img_urls = {
     'kubey': 'https://s7.gifyu.com/images/kubey.gif',

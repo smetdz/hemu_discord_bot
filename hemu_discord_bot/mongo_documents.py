@@ -76,3 +76,17 @@ class YouTubeChannel(Channel):
     class Meta:
         collection_name = 'youtube-channel'
 
+
+@instance.register
+class Poll(Document):
+    _id = fields.IntegerField(unique=True)
+    creator_id = fields.IntegerField()
+    channel_id = fields.IntegerField()
+    title = fields.StrField()
+    mention_role = fields.StrField()
+    duration = fields.IntegerField()
+    options_for_voting = fields.ListField(fields.ListField(fields.StrField))
+
+    class Meta:
+        collection_name = 'poll'
+
