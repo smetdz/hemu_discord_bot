@@ -19,7 +19,7 @@ class Info(commands.Cog):
         cogs_help = json.load(path.open(encoding='utf-8'))
 
         if command_name and not sub_command:
-            current_command = self.find_command(cogs_help, command_name)
+            current_command = self.get_command(cogs_help, command_name)
 
             if not current_command:
                 await ctx.send(f'Не знаю такой команды как **{command_name}**,'
@@ -31,10 +31,10 @@ class Info(commands.Cog):
             await ctx.send(embed=command_emb)
             return
         elif sub_command:
-            current_command = self.find_command(cogs_help, command_name)
-            try:
-                c_sub_command = current_command['sub_commands'][sub_command]
-            except KeyError:
+            current_command = self.get_command(cogs_help, command_name)
+            c_sub_command = self.find_command(current_command, sub_command, True)
+
+            if not c_sub_command:
                 await ctx.send(f'Не знаю такой подкоманды как **{command_name}**,'
                                f' попробуй еще раз{hemu_emoji["sad_hemu"]}')
                 return
@@ -48,7 +48,7 @@ class Info(commands.Cog):
         commands_emb.set_author(name='Hemu', icon_url=self.bot.user.avatar_url)
 
         for cog in cogs_help:
-            commands_str = ', '.join([f'`{item["name"]}`' for _, item in cog['commands'].items()])
+            commands_str = ', '.join([f'`{item["name"]}`' for item in cog['commands']])
             commands_emb.add_field(inline=False, name=cog['cog_name'], value=commands_str)
 
         commands_emb.set_footer(text='Что бы узнать больше информации о команде,'
@@ -56,13 +56,19 @@ class Info(commands.Cog):
 
         await ctx.send(embed=commands_emb)
 
+    def get_command(self, cogs_help: dict, command_name: str):
+        for c in cogs_help:
+            command = self.find_command(c, command_name)
+            if command:
+                return command
+
     @staticmethod
-    def find_command(cogs_help: dict, command_name):
-        for cog in cogs_help:
-            try:
-                return cog['commands'][command_name]
-            except KeyError:
-                continue
+    def find_command(c: dict, command_name: str, sub_command: bool = False):
+        c_type = 'commands' if not sub_command else 'sub_commands'
+        for command in c[c_type]:
+            lst = command['aliases'] + [command['name']]
+            if command_name in command['aliases'] + [command['name']]:
+                return command
 
         return None
 

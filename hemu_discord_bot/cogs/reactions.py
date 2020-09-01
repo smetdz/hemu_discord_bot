@@ -19,7 +19,7 @@ class ReactionCog(commands.Cog):
     @reaction.command(name='add')
     @commands.has_permissions(administrator=True)
     async def add_reaction(self, ctx: commands.Context, string: str, reaction: str, is_emb: str = None):
-        is_emb = True if is_emb in ['-e', '-emb', '-e'] else False
+        is_emb = True if is_emb in ['-e', '-emb'] else False
 
         if is_emb:
             try:
@@ -37,8 +37,12 @@ class ReactionCog(commands.Cog):
                 return
 
         try:
-            reaction_g = Reaction(string=string.lower(), reaction=reaction, is_emb=is_emb,
-                                  guild=fields.Reference(Guild, ctx.guild.id))
+            reaction_g = Reaction(
+                string=string.lower(),
+                reaction=reaction,
+                is_emb=is_emb,
+                guild=fields.Reference(Guild, ctx.guild.id)
+            )
             await reaction_g.commit()
             self.bot.add_reaction(ctx.guild.name, string.lower(), reaction, is_emb)
             await ctx.send('Реакция была успешно создана.')

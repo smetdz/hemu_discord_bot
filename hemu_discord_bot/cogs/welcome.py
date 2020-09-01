@@ -65,6 +65,12 @@ class Welcome(commands.Cog):
             g_role = guild.get_role(role.pk)
             for item in role.active_auto_role:
                 member = guild.get_member(item['user_id'])
+
+                if not member:
+                    role.active_auto_role.remove(item)
+                    await role.commit()
+                    continue
+
                 delay = int((datetime.now() - item['date_of_accession']).total_seconds())
 
                 if delay >= role.delay:

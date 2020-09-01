@@ -18,8 +18,10 @@ class Guild(Document):
 class AutoRole(Document):
     _id = fields.IntegerField(unique=True)
     delay = fields.IntegerField()
-    active_auto_role = fields.ListField(fields.DictField(user_id=fields.IntegerField(),
-                                                         date_of_accession=fields.DateTimeField()))
+    active_auto_role = fields.ListField(fields.DictField(
+        user_id=fields.IntegerField(),
+        date_of_accession=fields.DateTimeField())
+    )
     guild = fields.ReferenceField(document=Guild)
 
     class Meta:
@@ -52,9 +54,11 @@ class Reaction(Document):
 class Channel(Document):
     _id = fields.StrField(unique=True)
     title = fields.StrField()
-    guilds = fields.ListField(fields.DictField(guild_id=fields.IntegerField(unique=True),
-                                               channel_id=fields.IntegerField(),
-                                               role_id=fields.IntegerField()))
+    guilds = fields.ListField(fields.DictField(
+        guild_id=fields.IntegerField(unique=True),
+        channel_id=fields.IntegerField(),
+        role_id=fields.IntegerField())
+    )
 
     class Meta:
         abstract = True

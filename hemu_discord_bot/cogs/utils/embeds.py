@@ -15,7 +15,7 @@ def create_help_command_emb(current_command: dict, author) -> discord.Embed:
     try:
         command_emb.add_field(inline=False, name='**Подкоманды**',
                               value=", ".join([f"`{sub_command['name']}`"
-                                               for _, sub_command in current_command['sub_commands'].items()]))
+                                               for sub_command in current_command['sub_commands']]))
     except KeyError:
         pass
 

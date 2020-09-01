@@ -26,8 +26,12 @@ class YouTubeNotifier:
             'channel_id': y_ch.pk,
             'video_count': y_ch.video_count,
             'last_video_id': y_ch.last_video_id,
-            'guilds': [Guild(guild_id=guild['guild_id'], channel_id=guild['channel_id'], role_id=guild['role_id'])
-                       for guild in guilds]
+            'guilds': [Guild(
+                guild_id=guild['guild_id'],
+                channel_id=guild['channel_id'],
+                role_id=guild['role_id']
+            )
+                for guild in guilds]
         }
 
         return c_dict
@@ -96,26 +100,33 @@ class YouTubeNotifier:
         doc_channel = await YouTubeChannelDoc.find_one({'_id': youtube_channel.channel_id})
 
         if doc_channel:
-            doc_channel.guilds.append(fields.Dict(guild_id=data['guild_id'],
-                                                  channel_id=data['channel'],
-                                                  role_id=data['role']))
+            doc_channel.guilds.append(fields.Dict(
+                guild_id=data['guild_id'],
+                channel_id=data['channel'],
+                role_id=data['role']
+            ))
             await doc_channel.commit()
 
-            self.channels_dict[youtube_channel.title].add_guild(guild_id=data['guild_id'],
-                                                                role_id=data['role'],
-                                                                channel_id=data['channel'])
+            self.channels_dict[youtube_channel.title].add_guild(
+                guild_id=data['guild_id'],
+                role_id=data['role'],
+                channel_id=data['channel']
+            )
 
             return
 
         await self.add_new_channel(youtube_channel, data)
 
     async def add_new_channel(self, y_ch: YouTubeChannelRef, data: dict):
-        doc_channel = YouTubeChannelDoc(_id=y_ch.channel_id, title=y_ch.title,
+        doc_channel = YouTubeChannelDoc(_id=y_ch.channel_id,
+                                        title=y_ch.title,
                                         video_count=y_ch.video_count,
                                         last_video_id=y_ch.last_video.id,
-                                        guilds=[fields.Dict(guild_id=data['guild_id'],
-                                                            channel_id=data['channel'],
-                                                            role_id=data['role'])])
+                                        guilds=[fields.Dict(
+                                            guild_id=data['guild_id'],
+                                            channel_id=data['channel'],
+                                            role_id=data['role']
+                                        )])
 
         await doc_channel.commit()
 
@@ -134,9 +145,11 @@ class YouTubeNotifier:
         doc_channel = await YouTubeChannelDoc.find_one({'title': channel_name})
 
         if len(self.channels_dict[channel_name].guilds):
-            doc_channel.guilds.remove(fields.Dict(guild_id=item.guild_id,
-                                                  channel_id=item.channel_id,
-                                                  role_id=item.role_id))
+            doc_channel.guilds.remove(fields.Dict(
+                guild_id=item.guild_id,
+                channel_id=item.channel_id,
+                role_id=item.role_id)
+            )
             await doc_channel.commit()
             return
 
