@@ -1,5 +1,6 @@
 import asyncio
 import datetime
+import random
 
 import pytz
 import discord
@@ -19,6 +20,17 @@ class Tools(commands.Cog):
         self.bot = bot
         self.bot.loop.create_task(self.load_pools_from_bd())
         self.bot.loop.create_task(self.load_reminds())
+
+    @commands.command(name='rand', aliases=('ранд', ))
+    async def rand(self, ctx: commands.Context, num1: str, num2: str = '0'):
+        try:
+            num1, num2 = sorted((int(num1), int(num2)))
+        except ValueError:
+            await ctx.send(f'Нужны числа {hemu_emoji["angry_hemu"]}')
+            return
+
+        rand_num = random.randint(num1, num2)
+        await ctx.send(rand_num)
 
     @commands.group(name='remind', aliases=('напоминание', 'напомни'))
     async def remind(self, ctx: commands.Context):

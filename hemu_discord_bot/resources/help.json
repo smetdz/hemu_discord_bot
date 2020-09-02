@@ -164,6 +164,13 @@
             "example": "!remind list"
           }
         ]
+      },
+      {
+        "name": "rand",
+        "aliases": ["ранд"],
+        "description": "Рандомит число в заданном диапазоне.",
+        "usage": "!rand [num1] [num2]\nВторой параметр по умолчанию равен нулю.",
+        "example": "!rand 20 200"
       }
     ]
   },
