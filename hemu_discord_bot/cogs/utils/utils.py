@@ -1,5 +1,7 @@
 import re
+from datetime import datetime
 
+import pytz
 from discord.utils import get
 from discord.ext import commands
 
@@ -68,4 +70,13 @@ def get_delay(delay_str: str):
         delay += int(r[:-1]) * delay_dict[r[-1]]
 
     return delay
+
+
+def get_utc_datetime(datetime_str: str):
+    c_datetime = datetime.strptime(datetime_str, '%d.%m.%Y-%H:%M')
+
+    tz_moscow = pytz.timezone('Europe/Moscow')
+    c_datetime.replace(tzinfo=tz_moscow)
+
+    return c_datetime.astimezone(pytz.utc)
 

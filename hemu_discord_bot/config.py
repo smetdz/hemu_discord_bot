@@ -39,6 +39,7 @@ poll_emoji = {
 poll_options_emoji = ['🇦', '🇧', '🇨', '🇩', '🇪', '🇫', '🇬', '🇭', '🇮', '🇯']
 
 hemu_emoji = {
+    'angry_hemu': '<:angry_hemu:727541921437974610>',
     'sad_hemu': '<:HomHomu3:732892869282496602>',
     'surprised_hemu': '<:HomHomu5:732893666363834379>',
     'hemu_fun': '<:HomHomu7:732894496810860636>',

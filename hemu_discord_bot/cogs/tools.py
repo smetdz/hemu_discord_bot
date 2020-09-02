@@ -1,6 +1,7 @@
 import asyncio
 import datetime
 
+import pytz
 import discord
 from discord.ext import commands
 from umongo import fields
@@ -8,15 +9,146 @@ from umongo import fields
 from bot import HemuBot
 from cogs.utils.poll import Poll
 from cogs.utils import errors
-from cogs.utils.utils import get_member, get_role, get_delay
+from cogs.utils.utils import get_member, get_role, get_delay, get_utc_datetime
 from config import hemu_emoji, poll_options_emoji, base_poll_duration
-from mongo_documents import Tag, Guild, Poll as DocumentPoll
+from mongo_documents import Tag, Guild, Poll as DocumentPoll, Remind
 
 
 class Tools(commands.Cog):
     def __init__(self, bot: HemuBot):
         self.bot = bot
         self.bot.loop.create_task(self.load_pools_from_bd())
+        self.bot.loop.create_task(self.load_reminds())
+
+    @commands.group(name='remind', aliases=('напоминание', 'напомни'))
+    async def remind(self, ctx: commands.Context):
+        pass
+
+    @remind.command(name='add', aliases=('добавить', 'создать'))
+    async def add_remind(self, ctx: commands.Context, time: str, *, text: str):
+        now = datetime.datetime.utcnow()
+        rem_time = None
+
+        try:
+            rem_time = get_utc_datetime(time)
+            delay = (rem_time - pytz.utc.localize(now)).total_seconds()
+
+            if delay < 0:
+                await ctx.send(f'Больше не буду возвращаться в прошлое {hemu_emoji["angry_hemu"]}')
+                return
+        except ValueError:
+            try:
+                delay = get_delay(time)
+            except errors.InvalidDelay:
+                await ctx.send(f'Не могу понять когда тебе напоминать, попробуй еще раз {hemu_emoji["angry_hemu"]}')
+                return
+
+        count = await Remind.count_documents({'user_id': ctx.author.id, 'guild_id': ctx.guild.id})
+
+        remind_id = ctx.message.id
+
+        if not rem_time:
+            rem_time = now + datetime.timedelta(seconds=delay)
+
+        remind = Remind(
+            _id=remind_id,
+            r_num=count + 1,
+            user_id=ctx.author.id,
+            text=text,
+            channel_id=ctx.channel.id,
+            guild_id=ctx.guild.id,
+            remind_time=rem_time
+        )
+
+        await remind.commit()
+        await ctx.send(f'Напоминание создано {hemu_emoji["hemu_fun"]}')
+        self.bot.loop.create_task(self.process_remind(remind_id, delay))
+
+    async def update_reminds_nums(self, user_id: int, guild_id: int):
+        reminds = await self.get_reminds({'user_id': user_id, 'guild_id': guild_id})
+        for i, remind in enumerate(reminds):
+            remind.r_num = i + 1
+            await remind.commit()
+
+    async def process_remind(self, remind_id: int, delay: int):
+        await asyncio.sleep(delay)
+
+        remind = await Remind.find_one({'_id': remind_id})
+
+        if remind:
+            try:
+                channel = self.bot.get_channel(remind.channel_id)
+                user = self.bot.get_user(remind.user_id)
+                await channel.send(f'{user.mention}, {remind.text}')
+                self.bot.loop.create_task(self.update_reminds_nums(user.id, remind.guild_id))
+            except Exception as e:
+                print(e)
+                await remind.remove()
+                return
+
+            await remind.remove()
+
+    async def load_reminds(self):
+        await asyncio.sleep(30)
+        reminds = await self.get_reminds({})
+
+        utc_now = datetime.datetime.utcnow()
+        for remind in reminds:
+            user = self.bot.get_user(remind.user_id)
+
+            if not user:
+                await remind.remove()
+                continue
+
+            delay = (remind.remind_time - utc_now).total_seconds()
+
+            if delay < 0:
+                delay = 0
+
+            self.bot.loop.create_task(self.process_remind(remind.pk, delay))
+
+    @staticmethod
+    async def get_reminds(find_d: dict):
+        reminds_ = Remind.find(find_d)
+        count = await Remind.count_documents(find_d)
+        return await reminds_.to_list(count)
+
+    @remind.command(name='remove', aliases=('удалить', 'delete', 'del', 'dlt'))
+    async def remove_remind(self, ctx: commands.Context, r_num: int):
+        remind = await Remind.find_one({'user_id': ctx.author.id, 'guild_id': ctx.guild.id, 'r_num': r_num})
+
+        if remind:
+            await remind.remove()
+            await ctx.send('Напоминание удалено.')
+
+            self.bot.loop.create_task(self.update_reminds_nums(ctx.author.id, ctx.guild.id))
+
+            return
+
+        await ctx.send(f'Нет напоминания под номером {r_num}')
+
+    @remind.command(name='list', aliases=('список', 'lst'))
+    async def show_reminds_list(self, ctx: commands.Context):
+        reminds = await self.get_reminds({'user_id': ctx.author.id, 'guild_id': ctx.guild.id})
+
+        if reminds:
+            utc_now = datetime.datetime.utcnow()
+            ru_tz = pytz.timezone('Europe/Moscow')
+            reminds_str = ''
+            for remind in reminds:
+                remind_utc_time = pytz.utc.localize(remind.remind_time)
+                remind_user_time = remind_utc_time.astimezone(ru_tz)
+                reminds_str += f'{remind.r_num} - {remind.text}, ' \
+                               f'Напомню: {remind_user_time.strftime("%d.%m.%Y-%H.%M.%S")}\n '
+            emb = discord.Embed(title=f'Напоминания пользователя {ctx.author}', colour=discord.Colour.dark_purple(),
+                                description=reminds_str[:-1])
+            emb.set_author(icon_url=ctx.author.avatar_url, name=ctx.author.name)
+            emb.timestamp = utc_now
+
+            await ctx.send(embed=emb)
+            return
+
+        await ctx.send(f'Напоминаний нет {hemu_emoji["sad_hemu"]}')
 
     @commands.command(name='poll', aliases=('голосование',))
     async def poll(self, ctx: commands.Context, poll_title: str, role_name: str, duration_str: str, *emoji_options):

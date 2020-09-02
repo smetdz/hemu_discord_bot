@@ -94,3 +94,16 @@ class Poll(Document):
     class Meta:
         collection_name = 'poll'
 
+
+@instance.register
+class Remind(Document):
+    _id = fields.IntegerField()
+    r_num = fields.IntegerField()
+    user_id = fields.IntegerField()
+    text = fields.StrField()
+    guild_id = fields.IntegerField()
+    channel_id = fields.IntegerField()
+    remind_time = fields.DateTimeField()
+
+    class Meta:
+        collection_name = 'remind'
