@@ -43,7 +43,7 @@ class Tools(commands.Cog):
                 await ctx.send(f'Не могу понять когда тебе напоминать, попробуй еще раз {hemu_emoji["angry_hemu"]}')
                 return
 
-        count = await Remind.count_documents({'user_id': ctx.author.id, 'guild_id': ctx.guild.id})
+        count = await Remind.count_documents({'user_id': ctx.author.id, 'guild': ctx.guild.id})
 
         remind_id = ctx.message.id
 
@@ -56,7 +56,7 @@ class Tools(commands.Cog):
             user_id=ctx.author.id,
             text=text,
             channel_id=ctx.channel.id,
-            guild_id=ctx.guild.id,
+            guild=fields.Reference(Guild, ctx.guild.id),
             remind_time=rem_time
         )
 
@@ -65,7 +65,7 @@ class Tools(commands.Cog):
         self.bot.loop.create_task(self.process_remind(remind_id, delay))
 
     async def update_reminds_nums(self, user_id: int, guild_id: int):
-        reminds = await self.get_reminds({'user_id': user_id, 'guild_id': guild_id})
+        reminds = await self.get_reminds({'user_id': user_id, 'guild': guild_id})
         for i, remind in enumerate(reminds):
             remind.r_num = i + 1
             await remind.commit()
@@ -80,7 +80,7 @@ class Tools(commands.Cog):
                 channel = self.bot.get_channel(remind.channel_id)
                 user = self.bot.get_user(remind.user_id)
                 await channel.send(f'{user.mention}, {remind.text}')
-                self.bot.loop.create_task(self.update_reminds_nums(user.id, remind.guild_id))
+                self.bot.loop.create_task(self.update_reminds_nums(user.id, remind.guild.pk))
             except Exception as e:
                 print(e)
                 await remind.remove()
@@ -115,7 +115,7 @@ class Tools(commands.Cog):
 
     @remind.command(name='remove', aliases=('удалить', 'delete', 'del', 'dlt'))
     async def remove_remind(self, ctx: commands.Context, r_num: int):
-        remind = await Remind.find_one({'user_id': ctx.author.id, 'guild_id': ctx.guild.id, 'r_num': r_num})
+        remind = await Remind.find_one({'user_id': ctx.author.id, 'guild': ctx.guild.id, 'r_num': r_num})
 
         if remind:
             await remind.remove()
@@ -129,7 +129,7 @@ class Tools(commands.Cog):
 
     @remind.command(name='list', aliases=('список', 'lst'))
     async def show_reminds_list(self, ctx: commands.Context):
-        reminds = await self.get_reminds({'user_id': ctx.author.id, 'guild_id': ctx.guild.id})
+        reminds = await self.get_reminds({'user_id': ctx.author.id, 'guild': ctx.guild.id})
 
         if reminds:
             utc_now = datetime.datetime.utcnow()

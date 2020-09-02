@@ -101,7 +101,7 @@ class Remind(Document):
     r_num = fields.IntegerField()
     user_id = fields.IntegerField()
     text = fields.StrField()
-    guild_id = fields.IntegerField()
+    guild = fields.ReferenceField(document=Guild)
     channel_id = fields.IntegerField()
     remind_time = fields.DateTimeField()
 

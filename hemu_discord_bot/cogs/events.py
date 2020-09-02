@@ -4,6 +4,7 @@ from discord.utils import get
 
 from bot import HemuBot
 import config
+from mongo_documents import Remind, AutoRole, Tag
 
 
 class Events(commands.Cog):
@@ -20,6 +21,27 @@ class Events(commands.Cog):
             chanel = list(member.guild.text_channels)[0]
 
         await chanel.send(f'Пользователь {member.name} покинул сервер.')
+        self.bot.loop.create_task(self.remove_user_data_from_bd(member.id, member.guild.id))
+
+    @staticmethod
+    async def remove_user_data_from_bd(user_id: int, guild_id: int):
+        docs = [Tag, Remind]
+        for d in docs:
+            files_ = d.find({'user_id': user_id, 'guild': guild_id})
+            count = await d.count_documents({'user_id': user_id, 'guild': guild_id})
+            files = await files_.to_list(count)
+
+            for file in files:
+                await file.remove()
+
+        roles_ = AutoRole.find({'guild': guild_id})
+        count = await AutoRole.count_documents({'guild': guild_id})
+        roles = await roles_.to_list(count)
+
+        for role in roles:
+            user_r = list(filter(lambda r: r['user_id'] == user_id, role.active_auto_role))[0]
+            role.active_auto_role.remove(user_r)
+            await role.commit()
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
