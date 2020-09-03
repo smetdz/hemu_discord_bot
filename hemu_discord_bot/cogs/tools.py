@@ -87,18 +87,24 @@ class Tools(commands.Cog):
 
         remind = await Remind.find_one({'_id': remind_id})
 
+        user = None
         if remind:
             try:
                 channel = self.bot.get_channel(remind.channel_id)
                 user = self.bot.get_user(remind.user_id)
-                await channel.send(f'{user.mention}, {remind.text}')
-                self.bot.loop.create_task(self.update_reminds_nums(user.id, remind.guild.pk))
+                await self.send_remind(channel, user, remind.text)
             except Exception as e:
                 print(e)
-                await remind.remove()
-                return
 
             await remind.remove()
+            if user:
+                self.bot.loop.create_task(self.update_reminds_nums(user.id, remind.guild.pk))
+
+    @staticmethod
+    async def send_remind(channel: discord.TextChannel, user: discord.User, text: str):
+        emb = discord.Embed(title='Напоминаю', description=text, colour=discord.Colour.dark_purple())
+        emb.set_footer(icon_url=user.avatar_url, text=f'Запросил {user.name}')
+        await channel.send(content=user.mention, embed=emb)
 
     async def load_reminds(self):
         await asyncio.sleep(30)
