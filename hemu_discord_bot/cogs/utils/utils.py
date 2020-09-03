@@ -79,7 +79,7 @@ def get_utc_datetime(datetime_str: str):
     tz_moscow = pytz.timezone('Europe/Moscow')
     print(tz_moscow.__dict__)
     c_datetime.replace(tzinfo=tz_moscow)
-    print(c_datetime)
+    print(c_datetime.tzinfo)
 
     print(c_datetime.astimezone(pytz.utc))
     return c_datetime.astimezone(pytz.utc)
