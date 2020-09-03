@@ -1,5 +1,5 @@
 import re
-from datetime import datetime
+from datetime import datetime, timezone
 
 import pytz
 from discord.utils import get
@@ -77,9 +77,10 @@ def get_utc_datetime(datetime_str: str):
     print(c_datetime)
 
     tz_moscow = pytz.timezone('Europe/Moscow')
+    print(tz_moscow)
     c_datetime.replace(tzinfo=tz_moscow)
     print(c_datetime)
 
-    print(c_datetime.astimezone(pytz.utc))
-    return c_datetime.astimezone(pytz.utc)
+    print(c_datetime.astimezone(timezone.utc))
+    return c_datetime.astimezone(timezone.utc)
 
