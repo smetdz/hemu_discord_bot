@@ -1,4 +1,5 @@
 import inspect
+import datetime
 
 import discord
 from discord.ext import commands
@@ -17,6 +18,7 @@ class Dev(commands.Cog):
             'ctx': ctx,
             'discord': discord,
             'bot': self.bot,
+            'datetime': datetime,
         }
 
         if 'pathlib' in code:
