@@ -15,7 +15,7 @@ class Info(commands.Cog):
 
     @commands.command(name='help', aliases=('h', 'cmds', 'commands'))
     async def help(self, ctx: commands.Context, command_name: str = None, sub_command: str = None):
-        path = pathlib.Path('resources/help.json')
+        path = pathlib.Path('hemu_discord_bot/resources/help.json')
         cogs_help = json.load(path.open(encoding='utf-8'))
 
         if command_name and not sub_command:
