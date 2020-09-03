@@ -1,13 +1,27 @@
 [
   {
-    "cog_name": "Забавы",
+    "cog_name": "Веселое",
     "commands": [
       {
-        "name": "аватар",
-        "aliases": ["avatar"],
-        "description": "Показывает аватар пользователя.",
-        "usage": "!аватар [member]",
-        "example": "!аватар @user"
+        "name": "обнять",
+        "aliases": ["hug"],
+        "description": "Обнять пользователя.",
+        "usage": "!обнять [member]",
+        "example": "!Обнять @user"
+      },
+      {
+        "name": "поцеловать",
+        "aliases": ["kiss"],
+        "description": "Поцеловать пользователя.",
+        "usage": "!поцеловать [member]",
+        "example": "!поцеловать @user"
+      },
+      {
+        "name": "ударить",
+        "aliases": ["slap"],
+        "description": "Ударить пользователя.",
+        "usage": "!ударить [member]",
+        "example": "!ударить @user"
       },
       {
         "name": "кубей",
