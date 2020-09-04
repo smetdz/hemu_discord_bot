@@ -14,6 +14,20 @@ class TenorRef:
         endpoint = 'search'
         media_filter = 'minimal'
 
+        return await self.get_results(search_str, endpoint, media_filter, limit)
+
+    async def get_gifs_list(self, search_str: str):
+        results = await self.search_gifs(search_str)
+        return [res['media'][0]['gif']['url'] for res in results]
+
+    async def get_random_gif(self, search_str: str, limit: int = 1):
+        endpoint = 'random'
+        media_filter = 'minimal'
+
+        result = await self.get_results(search_str, endpoint, media_filter, limit)
+        return result[0]['media'][0]['gif']['url']
+
+    async def get_results(self, search_str: str, endpoint: str, media_filter: str, limit: int):
         url = f'{self.BASE_API_URL}/{endpoint}?' \
               f'key={self.API_KEY}&' \
               f'q={search_str}&' \
@@ -21,10 +35,6 @@ class TenorRef:
               f'media_filter={media_filter}'
 
         return (await self.get_data(url))['results']
-
-    async def get_gifs_list(self, search_str: str):
-        results = await self.search_gifs(search_str)
-        return [res['media'][0]['gif']['url'] for res in results]
 
     @staticmethod
     async def get_data(url: str):

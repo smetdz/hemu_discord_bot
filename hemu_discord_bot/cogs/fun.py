@@ -48,28 +48,16 @@ class Fun(commands.Cog):
             await ctx.send(f'Не могу понять, что за пользователь этот твой "{user}",'
                            f' попробуй еще раз.{hemu_emoji["sad_hemu"]}')
 
-    def choose_description(self, author: discord.User, user: discord.User, act: str):
-        description_vars = self.get_description_vars(user.display_name, author.display_name, act)
-        if user.id == self.bot.user.id:
-            return description_vars[0]
-        elif user.id == author.id:
-            return description_vars[1]
-        else:
-            return description_vars[2]
+    @commands.command(name='gif', aliases=('гифка', 'гиф',))
+    async def gif(self, ctx: commands.Context, *, search_str: str = 'anime'):
+        try:
+            gif_url = await self.tenor_ref.get_random_gif(search_str)
+        except IndexError:
+            await ctx.send(f'Не могу найти гифку, попробуй еще раз {hemu_emoji["sad_hemu"]}')
+            return
 
-    @staticmethod
-    def get_description_vars(user_display_name: str, author_display_name: str, act: str):
-        emoji1 = hemu_emoji['hemu_what'] if act == 'бьет' else hemu_emoji['hemu_love']
-        emoji2 = hemu_emoji['sad_hemu'] if act == 'бьет' else hemu_emoji['surprised_hemu']
-        emoji3 = hemu_emoji['sad_hemu'] if act == 'бьет' else hemu_emoji['embarrassed_hemu']
-
-        description_vars = [
-            f'**{author_display_name}** {act} меня {emoji1}',
-            f'**{user_display_name}** {act} себя {emoji2}',
-            f'**{author_display_name}** {act} **{user_display_name}** {emoji3}'
-        ]
-
-        return description_vars
+        description = f'**{search_str}**'
+        await self.send_gif_message(ctx.channel, description, gif_url)
 
     @commands.command(name='hug', aliases=('обнять',))
     async def hug(self, ctx: commands.Context, user: str):
@@ -106,6 +94,29 @@ class Fun(commands.Cog):
 
         description = self.choose_description(ctx.author, user, 'бьет')
         await self.send_gif_message(ctx.channel, description, kiss_gif_url)
+
+    @staticmethod
+    def get_description_vars(user_display_name: str, author_display_name: str, act: str):
+        emoji1 = hemu_emoji['hemu_what'] if act == 'бьет' else hemu_emoji['hemu_love']
+        emoji2 = hemu_emoji['sad_hemu'] if act == 'бьет' else hemu_emoji['surprised_hemu']
+        emoji3 = hemu_emoji['sad_hemu'] if act == 'бьет' else hemu_emoji['embarrassed_hemu']
+
+        description_vars = [
+            f'**{author_display_name}** {act} меня {emoji1}',
+            f'**{user_display_name}** {act} себя {emoji2}',
+            f'**{author_display_name}** {act} **{user_display_name}** {emoji3}'
+        ]
+
+        return description_vars
+
+    def choose_description(self, author: discord.User, user: discord.User, act: str):
+        description_vars = self.get_description_vars(user.display_name, author.display_name, act)
+        if user.id == self.bot.user.id:
+            return description_vars[0]
+        elif user.id == author.id:
+            return description_vars[1]
+        else:
+            return description_vars[2]
 
     @staticmethod
     async def send_gif_message(channel: discord.TextChannel, description: str, gif_url: str):
