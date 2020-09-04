@@ -32,12 +32,16 @@ class Tools(commands.Cog):
         rand_num = random.randint(num1, num2)
         await ctx.send(rand_num)
 
-    @commands.group(name='remind', aliases=('напоминание', 'напомни'))
+    @commands.group(name='remind', aliases=('напоминание', 'напомни', 'нпмн', 'rmnd'))
     async def remind(self, ctx: commands.Context):
-        pass
+        params = ctx.message.content.split()
+        sub_commands = ['remove', 'удалить', 'delete', 'del', 'dlt', 'list', 'список', 'lst']
+        if params[1] in sub_commands:
+            pass
+        else:
+            await self.add_remind(ctx, params[1], ' '.join(params[2:]))
 
-    @remind.command(name='add', aliases=('добавить', 'создать'))
-    async def add_remind(self, ctx: commands.Context, time: str, *, text: str):
+    async def add_remind(self, ctx: commands.Context, time: str, text: str):
         now = datetime.datetime.utcnow()
         rem_time = None
 

@@ -165,18 +165,11 @@
       },
       {
         "name": "remind",
-        "aliases": [],
-        "description": "Вызывайте с подкомандами 'add', 'remove', 'list'.\n Используйте !help remind [имя подкоманды]",
-        "usage": "!remind [sub command] [args]",
-        "example": "!remind list",
+        "aliases": ["напоминание", "напомни", "нпмн", "rmnd"],
+        "description": "Создает новое напоминание.\nВызывайте с подкомандами 'add', 'remove', 'list'.\n Используйте !help remind [имя подкоманды]",
+        "usage": "!remind [delay|datetime] [text]",
+        "example": "!remind add 3h Посмотреть аниме\n!remind add 04.09.2020-11:00 Посмотреть аниме",
         "sub_commands": [
-          {
-            "name": "add",
-            "aliases": ["создать", "добавить"],
-            "description": "Создает новое напоминание.",
-            "usage": "!remind add [delay|datetime] [text]",
-            "example": "!remind add 3h Посмотреть аниме\n!remind add 04.09.2020-11:00 Посмотреть аниме"
-          },
           {
             "name": "remove",
             "aliases": ["del", "delete", "dlt", "удалить"],

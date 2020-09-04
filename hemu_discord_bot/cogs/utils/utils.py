@@ -75,7 +75,7 @@ def get_delay(delay_str: str):
 def get_utc_datetime(datetime_str: str):
     c_datetime = datetime.strptime(datetime_str, '%d.%m.%Y-%H:%M')
 
-    tz_moscow = pytz.timezone('Europe/Moscow')
+    tz_moscow = pytz.timezone('Etc/GMT-3')
     c_datetime = c_datetime.replace(tzinfo=tz_moscow)
 
     return c_datetime.astimezone(pytz.utc)
