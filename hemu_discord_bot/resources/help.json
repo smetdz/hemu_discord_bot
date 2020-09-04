@@ -24,6 +24,13 @@
         "example": "!ударить @user"
       },
       {
+        "name": "аватар",
+        "aliases": ["avatar"],
+        "description": "Показывает аватар пользователя.",
+        "usage": "!аватар [member]",
+        "example": "!аватар @user"
+      },
+      {
         "name": "кубей",
         "aliases": ["kyuubey"],
         "description": "Гифка с Кубеем",
