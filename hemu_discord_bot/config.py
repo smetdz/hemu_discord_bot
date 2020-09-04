@@ -38,9 +38,20 @@ poll_emoji = {
 
 poll_options_emoji = ['🇦', '🇧', '🇨', '🇩', '🇪', '🇫', '🇬', '🇭', '🇮', '🇯']
 
+hemu_hugs_gifs = [
+    'https://media.tenor.com/images/fc896d285bad56a4180ba843d8c002c8/tenor.gif',
+    'https://i.gifer.com/MtZk.gif',
+    'https://i.gifer.com/KemG.gif',
+    'https://media.tenor.com/images/72f1243e8813138fa51ef51eb5113e27/tenor.gif',
+]
+
 hemu_emoji = {
     'angry_hemu': '<:angry_hemu:727541921437974610>',
     'sad_hemu': '<:HomHomu3:732892869282496602>',
     'surprised_hemu': '<:HomHomu5:732893666363834379>',
     'hemu_fun': '<:HomHomu7:732894496810860636>',
+    'embarrassed_hemu': '<:HomHomu2:732892401974378556>',
+    'hemu_love': '<:HomHomu6:732893959801667655>',
+    'hemu_what': '<:Hemu:701501674065362985>',
+    'hemu_heh': '<:Homura_Heh:723621138835701940>',
 }

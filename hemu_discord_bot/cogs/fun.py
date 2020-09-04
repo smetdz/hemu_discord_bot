@@ -13,6 +13,18 @@ from config import hemu_emoji, hemu_hugs_gifs
 class Fun(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
+        self.tenor_ref = tenor.TenorRef()
+
+        self.hug_gifs = None
+        self.kiss_gifs = None
+        self.slap_gifs = None
+
+        self.bot.loop.create_task(self.load_gifs())
+
+    async def load_gifs(self):
+        self.hug_gifs = await self.tenor_ref.get_gifs_list('anime hug')
+        self.kiss_gifs = await self.tenor_ref.get_gifs_list('anime kiss')
+        self.slap_gifs = await self.tenor_ref.get_gifs_list('anime slap')
 
     @commands.command(name='avatar', aliases=('аватар',))
     async def avatar(self, ctx: commands.Context, *, member: str = None):
@@ -47,12 +59,14 @@ class Fun(commands.Cog):
 
     @staticmethod
     def get_description_vars(user_display_name: str, author_display_name: str, act: str):
-        hemu_h_emoji = hemu_emoji['sad_hemu'] if act == 'бьет' else hemu_emoji['hemu_love']
+        emoji1 = hemu_emoji['hemu_what'] if act == 'бьет' else hemu_emoji['hemu_love']
+        emoji2 = hemu_emoji['sad_hemu'] if act == 'бьет' else hemu_emoji['surprised_hemu']
+        emoji3 = hemu_emoji['sad_hemu'] if act == 'бьет' else hemu_emoji['embarrassed_hemu']
 
         description_vars = [
-            f'**{author_display_name}** {act} меня {hemu_h_emoji}',
-            f'**{user_display_name}** {act} себя {hemu_emoji["surprised_hemu"]}',
-            f'**{author_display_name}** {act} **{user_display_name}** {hemu_emoji["embarrassed_hemu"]}'
+            f'**{author_display_name}** {act} меня {emoji1}',
+            f'**{user_display_name}** {act} себя {emoji2}',
+            f'**{author_display_name}** {act} **{user_display_name}** {emoji3}'
         ]
 
         return description_vars
@@ -66,7 +80,7 @@ class Fun(commands.Cog):
         if user.id == self.bot.user.id:
             hug_gif_url = random.choice(hemu_hugs_gifs)
         else:
-            hug_gif_url = await tenor.TenorRef().get_random_gif_from_most_popular('anime hug')
+            hug_gif_url = random.choice(self.hug_gifs)
 
         description = self.choose_description(ctx.author, user, 'обнимает')
         await self.send_gif_message(ctx.channel, description, hug_gif_url)
@@ -77,7 +91,7 @@ class Fun(commands.Cog):
         if not user:
             return
 
-        kiss_gif_url = await tenor.TenorRef().get_random_gif_from_most_popular('anime kiss')
+        kiss_gif_url = random.choice(self.kiss_gifs)
 
         description = self.choose_description(ctx.author, user, 'целует')
         await self.send_gif_message(ctx.channel, description, kiss_gif_url)
@@ -88,7 +102,7 @@ class Fun(commands.Cog):
         if not user:
             return
 
-        kiss_gif_url = await tenor.TenorRef().get_random_gif_from_most_popular('anime slap')
+        kiss_gif_url = random.choice(self.slap_gifs)
 
         description = self.choose_description(ctx.author, user, 'бьет')
         await self.send_gif_message(ctx.channel, description, kiss_gif_url)
