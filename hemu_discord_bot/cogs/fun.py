@@ -15,18 +15,20 @@ class Fun(commands.Cog):
         self.bot = bot
         self.tenor_ref = tenor.TenorRef()
 
-        self.hug_gifs = None
-        self.kiss_gifs = None
-        self.slap_gifs = None
-        self.sad_gifs = None
+        self.hug_gifs = []
+        self.kiss_gifs = []
+        self.slap_gifs = []
+        self.sad_gifs = []
+        self.blush_gifs = []
 
         self.bot.loop.create_task(self.load_gifs())
 
     async def load_gifs(self):
-        self.hug_gifs = await self.tenor_ref.get_gifs_list('anime hug')
-        self.kiss_gifs = await self.tenor_ref.get_gifs_list('anime kiss')
-        self.slap_gifs = await self.tenor_ref.get_gifs_list('anime slap')
-        self.sad_gifs = await self.tenor_ref.get_gifs_list('anime sad')
+        search_queries = ['anime hug', 'anime kiss', 'anime slap', 'anime sad', 'anime blush']
+        gifs_lists = [self.hug_gifs, self.kiss_gifs, self.slap_gifs, self.sad_gifs, self.blush_gifs]
+
+        for i in range(len(search_queries)):
+            gifs_lists[i] += await self.tenor_ref.get_gifs_list(search_queries[i])
 
     @commands.command(name='avatar', aliases=('аватар',))
     async def avatar(self, ctx: commands.Context, *, member: str = None):
@@ -66,6 +68,12 @@ class Fun(commands.Cog):
         sad_gif_url = random.choice(self.sad_gifs)
         description = f'**{ctx.author.display_name}** грустит {hemu_emoji["sad_hemu"]}'
         await self.send_gif_message(ctx.channel, description, sad_gif_url)
+
+    @commands.command(name='blush', aliases=('смущаться, смущаюсь', ))
+    async def blush(self, ctx: commands.Context):
+        blush_gif_url = random.choice(self.blush_gifs)
+        description = f'**{ctx.author.display_name}** смущается {hemu_emoji["embarrassed_hemu"]}'
+        await self.send_gif_message(ctx.channel, description, blush_gif_url)
 
     @commands.command(name='hug', aliases=('обнять',))
     async def hug(self, ctx: commands.Context, user: str):
