@@ -76,7 +76,7 @@ class Fun(commands.Cog):
         await self.send_gif_message(ctx.channel, description, blush_gif_url)
 
     @commands.command(name='hug', aliases=('обнять',))
-    async def hug(self, ctx: commands.Context, user: str):
+    async def hug(self, ctx: commands.Context, *, user: str):
         user = await self.user_check_and_return(ctx, user)
         if not user:
             return
@@ -89,8 +89,8 @@ class Fun(commands.Cog):
         description = self.choose_description(ctx.author, user, 'обнимает')
         await self.send_gif_message(ctx.channel, description, hug_gif_url)
 
-    @commands.command(name='kiss', aliases=('поцеловать',))
-    async def kiss(self, ctx: commands.Context, user: str):
+    @commands.command(name='kiss', aliases=('поцеловать', ))
+    async def kiss(self, ctx: commands.Context, *, user: str):
         user = await self.user_check_and_return(ctx, user)
         if not user:
             return
@@ -101,7 +101,7 @@ class Fun(commands.Cog):
         await self.send_gif_message(ctx.channel, description, kiss_gif_url)
 
     @commands.command(name='slap', aliases=('ударить',))
-    async def slap(self, ctx: commands.Context, user: str):
+    async def slap(self, ctx: commands.Context, *, user: str):
         user = await self.user_check_and_return(ctx, user)
         if not user:
             return
