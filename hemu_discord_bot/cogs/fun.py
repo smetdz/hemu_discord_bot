@@ -63,13 +63,13 @@ class Fun(commands.Cog):
         description = f'**{search_str}**'
         await self.send_gif_message(ctx.channel, description, gif_url)
 
-    @commands.command(name='sad', aliases=('грустить', 'грущу', ))
+    @commands.command(name='sad', aliases=('грустить', 'грущу', 'грусть'))
     async def sad(self, ctx: commands.Context):
         sad_gif_url = random.choice(self.sad_gifs)
         description = f'**{ctx.author.display_name}** грустит {hemu_emoji["sad_hemu"]}'
         await self.send_gif_message(ctx.channel, description, sad_gif_url)
 
-    @commands.command(name='blush', aliases=('смущаться, смущаюсь', ))
+    @commands.command(name='blush', aliases=('смущаться', 'смущаюсь', 'смущение', 'краснею'))
     async def blush(self, ctx: commands.Context):
         blush_gif_url = random.choice(self.blush_gifs)
         description = f'**{ctx.author.display_name}** смущается {hemu_emoji["embarrassed_hemu"]}'
