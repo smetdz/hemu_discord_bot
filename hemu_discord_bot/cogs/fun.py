@@ -7,7 +7,7 @@ import config
 from cogs.utils.utils import get_member
 from cogs.utils import errors
 from cogs.services import tenor
-from config import hemu_emoji, hemu_hugs_gifs
+from config import hemu_emoji, hemu_hugs_gifs, ball_answers, emoji_dict
 
 
 class Fun(commands.Cog):
@@ -29,6 +29,28 @@ class Fun(commands.Cog):
 
         for i in range(len(search_queries)):
             gifs_lists[i] += await self.tenor_ref.get_gifs_list(search_queries[i])
+
+    @commands.command(name='ball', aliases=('шар', ))
+    async def ball(self, ctx: commands.Context, *, question: str = None):
+        if not question:
+            await ctx.send('Задай мне вопрос.')
+            return
+
+        answer = random.choice(ball_answers)
+        await ctx.send(answer)
+
+    @commands.command(name='coin', aliases=('монетка', ))
+    async def coin(self, ctx: commands.Context):
+        num = random.randint(1, 1000)
+
+        if num in range(1, 496):
+            answer = f'Орел {emoji_dict["coin"]}'
+        elif num in range(496, 506):
+            answer = f'Ребро {emoji_dict["coin"]}'
+        else:
+            answer = f'Решка {emoji_dict["coin"]}'
+
+        await ctx.send(answer)
 
     @commands.command(name='avatar', aliases=('аватар',))
     async def avatar(self, ctx: commands.Context, *, member: str = None):

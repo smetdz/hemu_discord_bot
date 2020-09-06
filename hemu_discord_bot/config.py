@@ -26,7 +26,8 @@ channels = {
 emoji_dict = {
     'angry_hemu': '<:angry_hemu:727541921437974610>',
     'kirigiri': '<:Kirigiri:700308055287529642>',
-    'sayaka': '<:Sayaka:723625132051923006>'
+    'sayaka': '<:Sayaka:723625132051923006>',
+    'coin': '<a:coin:752291125749874738>'
 }
 
 base_poll_duration = 86400
@@ -55,3 +56,26 @@ hemu_emoji = {
     'hemu_what': '<:Hemu:701501674065362985>',
     'hemu_heh': '<:Homura_Heh:723621138835701940>',
 }
+
+ball_answers = [
+    f'Бесспорно {hemu_emoji["hemu_fun"]}',
+    f'Предрешено {hemu_emoji["hemu_fun"]}',
+    f'Никаких сомнений {hemu_emoji["hemu_fun"]}',
+    f'Определённо да {hemu_emoji["hemu_fun"]}',
+    f'Можешь быть уверен в этом {hemu_emoji["hemu_fun"]}',
+    f'Мне кажется — да {hemu_emoji["hemu_fun"]}',
+    f'Вероятнее всего {hemu_emoji["hemu_fun"]}',
+    f'Хорошие перспективы {hemu_emoji["hemu_fun"]}',
+    f'Знаки говорят — да {hemu_emoji["hemu_fun"]}',
+    f'Да {hemu_emoji["hemu_fun"]}',
+    f'Пока не ясно, попробуй снова {hemu_emoji["hemu_heh"]}',
+    f'Спроси позже {hemu_emoji["hemu_heh"]}',
+    f'Лучше не рассказывать {hemu_emoji["hemu_heh"]}',
+    f'Сейчас нельзя предсказать {hemu_emoji["surprised_hemu"]}',
+    f'Сконцентрируйся и спроси опять {hemu_emoji["surprised_hemu"]}',
+    f'Даже не думай {hemu_emoji["angry_hemu"]}',
+    f'Мой ответ — нет {hemu_emoji["angry_hemu"]}',
+    f'По моим данным — нет {hemu_emoji["angry_hemu"]}',
+    f'Перспективы не очень хорошие {hemu_emoji["sad_hemu"]}',
+    f'Весьма сомнительно {hemu_emoji["sad_hemu"]}'
+]

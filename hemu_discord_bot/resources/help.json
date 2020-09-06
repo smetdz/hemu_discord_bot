@@ -3,11 +3,25 @@
     "cog_name": "Веселое",
     "commands": [
       {
+        "name": "шар",
+        "aliases": ["ball"],
+        "description": "Задай мне вопрос.",
+        "usage": "!шар [question]",
+        "example": "!шар У меня все будет хорошо?"
+      },
+      {
+        "name": "монетка",
+        "aliases": ["coin"],
+        "description": "Брось монетку.",
+        "usage": "!монетка",
+        "example": "!монетка"
+      },
+      {
         "name": "обнять",
         "aliases": ["hug"],
         "description": "Обнять пользователя.",
         "usage": "!обнять [member]",
-        "example": "!Обнять @user"
+        "example": "!обнять @user"
       },
       {
         "name": "поцеловать",
