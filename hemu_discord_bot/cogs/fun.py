@@ -18,6 +18,7 @@ class Fun(commands.Cog):
         self.hug_gifs = None
         self.kiss_gifs = None
         self.slap_gifs = None
+        self.sad_gifs = None
 
         self.bot.loop.create_task(self.load_gifs())
 
@@ -25,6 +26,7 @@ class Fun(commands.Cog):
         self.hug_gifs = await self.tenor_ref.get_gifs_list('anime hug')
         self.kiss_gifs = await self.tenor_ref.get_gifs_list('anime kiss')
         self.slap_gifs = await self.tenor_ref.get_gifs_list('anime slap')
+        self.sad_gifs = await self.tenor_ref.get_gifs_list('anime sad')
 
     @commands.command(name='avatar', aliases=('аватар',))
     async def avatar(self, ctx: commands.Context, *, member: str = None):
@@ -58,6 +60,12 @@ class Fun(commands.Cog):
 
         description = f'**{search_str}**'
         await self.send_gif_message(ctx.channel, description, gif_url)
+
+    @commands.command(name='sad', aliases=('грустить', 'грущу', ))
+    async def sad(self, ctx: commands.Context):
+        sad_gif_url = random.choice(self.sad_gifs)
+        description = f'**{ctx.author.display_name}** грустит {hemu_emoji["sad_hemu"]}'
+        await self.send_gif_message(ctx.channel, description, sad_gif_url)
 
     @commands.command(name='hug', aliases=('обнять',))
     async def hug(self, ctx: commands.Context, user: str):
