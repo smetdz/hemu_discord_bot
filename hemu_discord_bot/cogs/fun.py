@@ -7,6 +7,7 @@ import config
 from cogs.utils.utils import get_member
 from cogs.utils import errors
 from cogs.services import tenor
+from cogs.utils.checks import role_mentions_check
 from config import hemu_emoji, hemu_hugs_gifs, ball_answers, emoji_dict
 
 
@@ -51,6 +52,18 @@ class Fun(commands.Cog):
             answer = f'Решка {emoji_dict["coin"]}'
 
         await ctx.send(answer)
+
+    @commands.command(name='say', aliases=('скажи', ))
+    @commands.check(role_mentions_check)
+    async def say(self, ctx: commands.Context, *, text: str):
+        await ctx.message.delete()
+        await ctx.send(text)
+
+    @commands.command(name='me', aliases=('мне', 'я', ))
+    @commands.check(role_mentions_check)
+    async def me(self, ctx: commands.Context, *, text: str):
+        await ctx.message.delete()
+        await ctx.send(f'{ctx.author.mention} {text}')
 
     @commands.command(name='avatar', aliases=('аватар',))
     async def avatar(self, ctx: commands.Context, *, member: str = None):

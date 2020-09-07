@@ -17,6 +17,20 @@
         "example": "!монетка"
       },
       {
+        "name": "скажи",
+        "aliases": ["say"],
+        "description": "Повторю за вами.",
+        "usage": "!скажи [text]",
+        "example": "!скажи Меня зовут Hemu"
+      },
+      {
+        "name": "мне",
+        "aliases": ["me", "я"],
+        "description": "Сказать о себе в третьем лице.",
+        "usage": "!мне [text]",
+        "example": "!мне скучает."
+      },
+      {
         "name": "обнять",
         "aliases": ["hug"],
         "description": "Обнять пользователя.",
@@ -194,7 +208,7 @@
       {
         "name": "remind",
         "aliases": ["напоминание", "напомни", "нпмн", "rmnd"],
-        "description": "Создает новое напоминание.\nВызывайте с подкомандами 'add', 'remove', 'list'.\n Используйте !help remind [имя подкоманды]",
+        "description": "Создает новое напоминание.\nВызывайте с подкомандами 'remove', 'list'.\n Используйте !help remind [имя подкоманды]",
         "usage": "!remind [delay|datetime] [text]",
         "example": "!remind add 3h Посмотреть аниме\n!remind add 04.09.2020-11:00 Посмотреть аниме",
         "sub_commands": [
