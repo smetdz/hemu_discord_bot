@@ -65,6 +65,12 @@ class Fun(commands.Cog):
         await ctx.message.delete()
         await ctx.send(f'{ctx.author.mention} {text}')
 
+    @commands.command(name='choose', aliases=('выбрать', 'выбери'))
+    @commands.check(role_mentions_check)
+    async def choose(self, ctx: commands.Context, *options):
+        opt = random.choice(options)
+        await ctx.send(opt)
+
     @commands.command(name='avatar', aliases=('аватар',))
     async def avatar(self, ctx: commands.Context, *, member: str = None):
         if member:
