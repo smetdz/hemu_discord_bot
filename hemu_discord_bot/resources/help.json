@@ -210,7 +210,7 @@
         "aliases": ["напоминание", "напомни", "нпмн", "rmnd"],
         "description": "Создает новое напоминание.\nВызывайте с подкомандами 'remove', 'list'.\n Используйте !help remind [имя подкоманды]",
         "usage": "!remind [delay|datetime] [text]",
-        "example": "!remind add 3h Посмотреть аниме\n!remind add 04.09.2020-11:00 Посмотреть аниме",
+        "example": "!remind 3h Посмотреть аниме\n!remind 04.09.2020-11:00 Посмотреть аниме",
         "sub_commands": [
           {
             "name": "remove",
