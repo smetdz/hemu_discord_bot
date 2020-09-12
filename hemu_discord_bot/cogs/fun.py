@@ -90,7 +90,7 @@ class Fun(commands.Cog):
         try:
             return get_member(ctx, user)
         except errors.InvalidUser:
-            await ctx.send(f'Не могу понять, что за пользователь этот твой "{user}",'
+            await ctx.send(f'Не могу понять, что за пользователь этот твой "{user.strip("@")}",'
                            f' попробуй еще раз.{hemu_emoji["sad_hemu"]}')
 
     @commands.command(name='gif', aliases=('гифка', 'гиф',))
