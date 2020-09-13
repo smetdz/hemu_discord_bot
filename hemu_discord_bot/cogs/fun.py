@@ -72,6 +72,7 @@ class Fun(commands.Cog):
         await ctx.send(opt)
 
     @commands.command(name='avatar', aliases=('аватар',))
+    @commands.check(role_mentions_check)
     async def avatar(self, ctx: commands.Context, *, member: str = None):
         if member:
             user = await self.user_check_and_return(ctx, member)
@@ -90,7 +91,7 @@ class Fun(commands.Cog):
         try:
             return get_member(ctx, user)
         except errors.InvalidUser:
-            await ctx.send(f'Не могу понять, что за пользователь этот твой "{user.strip("@")}",'
+            await ctx.send(f'Не могу понять, что за пользователь этот твой "{user}",'
                            f' попробуй еще раз.{hemu_emoji["sad_hemu"]}')
 
     @commands.command(name='gif', aliases=('гифка', 'гиф',))
@@ -117,6 +118,7 @@ class Fun(commands.Cog):
         await self.send_gif_message(ctx.channel, description, blush_gif_url)
 
     @commands.command(name='hug', aliases=('обнять',))
+    @commands.check(role_mentions_check)
     async def hug(self, ctx: commands.Context, *, user: str):
         user = await self.user_check_and_return(ctx, user)
         if not user:
@@ -131,6 +133,7 @@ class Fun(commands.Cog):
         await self.send_gif_message(ctx.channel, description, hug_gif_url)
 
     @commands.command(name='kiss', aliases=('поцеловать', ))
+    @commands.check(role_mentions_check)
     async def kiss(self, ctx: commands.Context, *, user: str):
         user = await self.user_check_and_return(ctx, user)
         if not user:
@@ -142,6 +145,7 @@ class Fun(commands.Cog):
         await self.send_gif_message(ctx.channel, description, kiss_gif_url)
 
     @commands.command(name='slap', aliases=('ударить',))
+    @commands.check(role_mentions_check)
     async def slap(self, ctx: commands.Context, *, user: str):
         user = await self.user_check_and_return(ctx, user)
         if not user:
