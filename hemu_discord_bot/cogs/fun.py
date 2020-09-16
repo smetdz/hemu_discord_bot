@@ -86,7 +86,7 @@ class Fun(commands.Cog):
         else:
             user = ctx.author
 
-        icon_emb = discord.Embed(title=f'Аватар {user.name}', colour=discord.Color.dark_purple())
+        icon_emb = discord.Embed(title=f'Аватар {user.display_name}', colour=discord.Color.dark_purple())
         icon_emb.set_image(url=user.avatar_url)
 
         await ctx.send(embed=icon_emb)
