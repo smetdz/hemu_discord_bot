@@ -22,12 +22,16 @@ class Fun(commands.Cog):
         self.sad_gifs = []
         self.blush_gifs = []
         self.angry_gifs = []
+        self.confused_gifs = []
+        self.happy_gifs = []
 
         self.bot.loop.create_task(self.load_gifs())
 
     async def load_gifs(self):
-        search_queries = ['anime hug', 'anime kiss', 'anime slap', 'anime sad', 'anime blush', 'anime angry']
-        gifs_lists = [self.hug_gifs, self.kiss_gifs, self.slap_gifs, self.sad_gifs, self.blush_gifs, self.angry_gifs]
+        search_queries = ['anime hug', 'anime kiss', 'anime slap', 'anime sad',
+                          'anime blush', 'anime angry', 'anime confused', 'anime happy']
+        gifs_lists = [self.hug_gifs, self.kiss_gifs, self.slap_gifs, self.sad_gifs,
+                      self.blush_gifs, self.angry_gifs, self.confused_gifs, self.happy_gifs]
 
         for i in range(len(search_queries)):
             gifs_lists[i] += await self.tenor_ref.get_gifs_list(search_queries[i])
@@ -118,11 +122,23 @@ class Fun(commands.Cog):
         description = f'**{ctx.author.display_name}** смущается {hemu_emoji["embarrassed_hemu"]}'
         await self.send_gif_message(ctx.channel, description, blush_gif_url)
 
-    @commands.command(name='angry', aliases=('злюсь', 'злиться', 'злость'))
+    @commands.command(name='angry', aliases=('злюсь', 'злиться', 'злость',))
     async def angry(self, ctx: commands.Context):
         angry_gif_url = random.choice(self.angry_gifs)
         description = f'**{ctx.author.display_name}** злится {hemu_emoji["angry_hemu"]}'
         await self.send_gif_message(ctx.channel, description, angry_gif_url)
+
+    @commands.command(name='confused', aliases=('растеряться', 'растерянный', 'растерянность',))
+    async def confused(self, ctx: commands.Context):
+        confused_gif = random.choice(self.confused_gifs)
+        description = f'**{ctx.author.display_name}** растерян {hemu_emoji["surprised_hemu"]}'
+        await self.send_gif_message(ctx.channel, description, confused_gif)
+
+    @commands.command(name='happy', aliases=('радоваться', 'радуюсь', 'радость',))
+    async def happy(self, ctx: commands.Context):
+        happy_gif_url = random.choice(self.happy_gifs)
+        description = f'**{ctx.author.display_name}** счастлив {hemu_emoji["hemu_fun"]}'
+        await self.send_gif_message(ctx.channel, description, happy_gif_url)
 
     @commands.command(name='hug', aliases=('обнять',))
     @commands.check(role_mentions_check)
