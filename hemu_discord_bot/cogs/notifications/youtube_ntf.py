@@ -59,12 +59,30 @@ class YouTubeNotifier:
             if c_video_count != c_channel.video_count:
                 last_video = await self.youtube.get_last_channel_video(c_channel.id)
 
+                if c_video_count > c_channel.video_count and last_video.id == c_channel.last_video_id:
+                    self.bot.loop.create_task(self.process_video_count_change(c_channel, c_video_count))
+                    self.channels_dict.pop(channel_title)
+                    continue
+
                 delay_s = (datetime.now() - last_video.published_at).total_seconds()
 
-                if c_channel.last_video_id != last_video.id and delay_s < 1200:
+                if c_channel.last_video_id != last_video.id and delay_s < 2400:
                     self.bot.loop.create_task(self.notify_about_new_video(channel_title, c_channel.guilds, last_video))
 
                 self.bot.loop.create_task(self.update_channel_last_video(channel_title, last_video, c_video_count))
+
+    async def process_video_count_change(self, channel: YouTubeChannel, new_video_count: int):
+        for _ in range(3):
+            await asyncio.sleep(3600)
+            last_video = await self.youtube.get_last_channel_video(channel.id)
+            if last_video.id != channel.last_video_id:
+                self.bot.loop.create_task(self.notify_about_new_video(channel.title, channel.guilds, last_video))
+                self.bot.loop.create_task(self.update_channel_last_video(channel.title, last_video, new_video_count))
+
+                self.channels_dict[channel.title] = channel
+                return
+
+        self.channels_dict[channel.title] = channel
 
     async def notify_about_new_video(self, channel_title: str, guilds: list, video: YouTubeVideo):
         for item in guilds:
