@@ -15,12 +15,12 @@ class Events(commands.Cog):
     async def on_member_remove(self, member: discord.Member):
         print(f'Member {member.name} left the server')
 
-        chanel = get(member.guild.text_channels, id=config.channels['admin_ch'])
+        channel = get(member.guild.text_channels, id=config.channels['admin_ch'])
 
-        if not chanel:
-            chanel = list(member.guild.text_channels)[0]
+        if not channel:
+            channel = list(member.guild.text_channels)[0]
 
-        await chanel.send(f'Пользователь {member.name} покинул сервер.')
+        await channel.send(f'Пользователь {member.name} покинул сервер.')
         self.bot.loop.create_task(self.remove_user_data_from_bd(member.id, member.guild.id))
 
     @staticmethod
@@ -56,6 +56,12 @@ class Events(commands.Cog):
     async def on_raw_reaction_add(self, payload: discord.RawReactionActionEvent):
         if payload.user_id == config.HEMU_ID:
             return
+
+        if self.bot.list_views:
+            try:
+                await self.bot.list_views[payload.message_id].update(payload.emoji)
+            except KeyError:
+                pass
 
         if self.bot.polls:
             try:

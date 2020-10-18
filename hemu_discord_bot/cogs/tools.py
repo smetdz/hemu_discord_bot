@@ -9,6 +9,7 @@ from umongo import fields
 
 from bot import HemuBot
 from cogs.utils.poll import Poll
+from cogs.utils.base import TagsListView
 from cogs.utils import errors
 from cogs.utils.utils import get_member, get_role, get_delay, get_utc_datetime
 from config import hemu_emoji, poll_options_emoji, base_poll_duration
@@ -30,7 +31,7 @@ class Tools(commands.Cog):
             return
 
         rand_num = random.randint(num1, num2)
-        await ctx.send(rand_num)
+        await ctx.send(str(rand_num))
 
     @commands.group(name='remind', aliases=('напоминание', 'напомни', 'нпмн', 'rmnd'))
     async def remind(self, ctx: commands.Context):
@@ -289,29 +290,23 @@ class Tools(commands.Cog):
 
     @commands.group(name='tag')
     async def tag(self, ctx: commands.Context):
-        pass
+        params = ctx.message.content.split()
+        sub_commands = ['create', 'создать', 'add', 'list', 'список', 'lst',
+                        'edit', 'изменить', 'delete', 'del', 'dlt', 'удалить']
 
-    @tag.command(name='show')
-    async def show_tag(self, ctx: commands.Context, *, tag_name: str):
-        await self.return_tag(ctx, ctx.author.id, ctx.guild.id, tag_name)
+        if params[1] in sub_commands:
+            pass
+        else:
+            await self.return_tag(ctx, ctx.guild.id, ' '.join(params[1:]))
 
-    @tag.command(name='usertag')
-    async def user_tag(self, ctx: commands.Context, user: str, *, tag_name: str):
-        try:
-            member = get_member(ctx, user)
-            await self.return_tag(ctx, member.id, ctx.guild.id, tag_name)
-        except errors.InvalidUser:
-            await ctx.send(f'Не могу понять, что за пользователь этот твой "{user}",'
-                           f' попробуй еще раз. {hemu_emoji["sad_hemu"]}')
-
-    async def return_tag(self, ctx: commands.Context, user_id: int, guild_id: int, tag_name: str):
-        tag = await self.find_tag(user_id, guild_id, tag_name)
+    async def return_tag(self, ctx: commands.Context, guild_id: int, tag_name: str):
+        tag = await self.find_tag(guild_id, tag_name)
 
         if tag:
             await ctx.send(f'{tag.text}')
             return
 
-        tag_list = await self.search_tag(user_id, guild_id, tag_name)
+        tag_list = await self.search_tag(guild_id, tag_name)
         await self.return_tag_list(ctx, tag_name, tag_list)
 
     @staticmethod
@@ -319,30 +314,30 @@ class Tools(commands.Cog):
         if tag_list:
             emb = discord.Embed(title=f'Не могу найти тег {tag_name}, похожее:',
                                 colour=discord.Colour.dark_purple(),
-                                description='\n'.join(f'**{ind + 1}.** {tag}' for ind, tag in enumerate(tag_list)))
+                                description='\n'.join(f'**{ind + 1}.** {tag}' for ind, tag in enumerate(tag_list[:20])))
             await ctx.send(embed=emb)
             return
 
         await ctx.send(f'Тега {tag_name} нет {hemu_emoji["sad_hemu"]}')
 
-    async def search_tag(self, user_id: int, guild_id: int, tag_name: str):
-        tags = await self.get_tags(user_id, guild_id)
+    async def search_tag(self, guild_id: int, tag_name: str):
+        tags = await self.get_tags(guild_id, all_tags=True)
         s_tag_name = set(tag_name.split())
 
         return [tag.name for tag in tags if s_tag_name.issubset(set(tag.text.split())) or tag_name in tag.name]
 
     @staticmethod
-    async def get_tags(user_id: int, guild_id: int, all_tags: bool = False):
+    async def get_tags(guild_id: int, user_id: int = None, all_tags: bool = False):
         f_dict = {'guild': guild_id} if all_tags else {'user_id': user_id, 'guild': guild_id}
 
         tags_ = Tag.find(f_dict)
-        count = await Tag.count_documents({'guild': guild_id})
+        count = await Tag.count_documents(f_dict)
         return await tags_.to_list(count)
 
     @tag.command(name='create', aliases=('создать', 'add',))
     async def create_tag(self, ctx: commands.Context, tag_name: str, *, tag_text: str):
         try:
-            await self.tag_uniq_check(ctx.author.id, ctx.guild.id, tag_name)
+            await self.tag_uniq_check(ctx.guild.id, tag_name)
         except errors.TagAlreadyExists:
             await ctx.send('Тег с этим именем уже существует,'
                            ' что бы изменить его содержимое вызовите ```!tag edit [name] [new_text]```')
@@ -356,31 +351,37 @@ class Tools(commands.Cog):
 
     @tag.command(name='remove', aliases=('delete', 'del', 'dlt', 'удалить',))
     async def remove_tag(self, ctx: commands.Context, tag_name: str):
-        tag = await self.find_tag(ctx.author.id, ctx.guild.id, tag_name)
+        tag = await self.find_tag(ctx.guild.id, tag_name)
 
         if tag:
-            await tag.remove()
-            await ctx.send(f'Тег "{tag_name}" удален')
+            if tag.user_id != ctx.author.id or ctx.author.guild_permissions.manage_messages:
+                await tag.remove()
+                await ctx.send(f'Тег "{tag_name}" удален')
+                return
+            await ctx.send(f'Тег не твой {hemu_emoji["angry_hemu"]}')
             return
 
-        tag_list = await self.search_tag(ctx.author.id, ctx.guild.id, tag_name)
+        tag_list = await self.search_tag(ctx.guild.id, tag_name)
         await self.return_tag_list(ctx, tag_name, tag_list)
 
     @tag.command(name='edit', aliases=('изменить',))
     async def edit_tag(self, ctx: commands.Context, tag_name, *, new_tag_text: str):
-        tag = await self.find_tag(ctx.author.id, ctx.guild.id, tag_name)
+        tag = await self.find_tag(ctx.guild.id, tag_name)
 
         if tag:
-            tag.text = new_tag_text
-            await tag.commit()
-            await ctx.send(f'Содержимое тега "{tag_name}" изменено.')
+            if tag.user_id != ctx.author.id or ctx.author.guild_permissions.manage_messages:
+                tag.text = new_tag_text
+                await tag.commit()
+                await ctx.send(f'Содержимое тега "{tag_name}" изменено.')
+                return
+            await ctx.send(f'Тег не твой {hemu_emoji["angry_hemu"]}')
             return
 
-        tag_list = await self.search_tag(ctx.author.id, ctx.guild.id, tag_name)
+        tag_list = await self.search_tag(ctx.guild.id, tag_name)
         await self.return_tag_list(ctx, tag_name, tag_list)
 
     @tag.command(name='list', aliases=('lst', 'список',))
-    async def show_tags_list(self, ctx: commands.Context, *, user: str = None):
+    async def show_tags(self, ctx: commands.Context, page: int = 1, *, user: str = None):
         if user:
             try:
                 member = get_member(ctx, user)
@@ -388,42 +389,38 @@ class Tools(commands.Cog):
                 await ctx.send(f'Не могу понять, что за пользователь этот твой "{user}",'
                                f' попробуй еще раз. {hemu_emoji["sad_hemu"]}')
                 return
+
+            search_d = {'user_id': member.id, 'guild': ctx.guild.id}
+            title = f'Теги пользователя {member}:'
         else:
-            member = ctx.author
+            search_d = {'guild': ctx.guild.id}
+            title = f'Теги на сервере {ctx.guild.name}'
 
-        tags = await self.get_tags(member.id, ctx.guild.id)
+        await self.show_tags_list(page, search_d, title, ctx.channel)
 
-        if tags:
-            emb = discord.Embed(title=f'Теги пользователя {member}:',
-                                colour=discord.Colour.dark_purple(),
-                                description='\n'.join([f'**{ind + 1}.** {tag.name}' for ind, tag in enumerate(tags)]))
-            await ctx.send(embed=emb)
+    async def show_tags_list(self, page: int, search_d: dict, title: str, channel: discord.TextChannel):
+        tags_count = await Tag.count_documents(search_d)
+
+        if not tags_count:
+            await channel.send(f'Нет тегов {hemu_emoji["sad_hemu"]}')
             return
 
-        await ctx.send(f'Нет тегов {hemu_emoji["sad_hemu"]}')
+        tag_lst_view = TagsListView(title, 15, page, tags_count, search_d, Tag)
 
-    @tag.command(name='all', aliases=('все',))
-    async def show_all_tags(self, ctx: commands.Context):
-        tags = await self.get_tags(ctx.author.id, ctx.guild.id, True)
+        message_id = await tag_lst_view.show(channel)
+        self.bot.list_views[message_id] = tag_lst_view
 
-        if tags:
-            emb = discord.Embed(title=f'Теги на сервере {ctx.guild}:',
-                                colour=discord.Colour.dark_purple(),
-                                description='\n'.join([f'{ind + 1}. Тег: {tag.name},'
-                                                       f' пользователь: {self.bot.get_user(tag.user_id)}'
-                                                       for ind, tag in enumerate(tags)]))
-            await ctx.send(embed=emb)
-            return
+        await asyncio.sleep(120)
 
-        await ctx.send(f'На сервере нет тегов {hemu_emoji["sad_hemu"]}')
+        self.bot.list_views.pop(message_id)
 
-    async def tag_uniq_check(self, user_id: int, guild_pk: int, tag_name: str):
-        if await self.find_tag(user_id, guild_pk, tag_name):
+    async def tag_uniq_check(self, guild_pk: int, tag_name: str):
+        if await self.find_tag(guild_pk, tag_name):
             raise errors.TagAlreadyExists
 
     @staticmethod
-    async def find_tag(user_id: int, guild_pk: int, tag_name: str):
-        return await Tag.find_one({'user_id': user_id, 'guild': guild_pk, 'name': tag_name})
+    async def find_tag(guild_pk: int, tag_name: str):
+        return await Tag.find_one({'guild': guild_pk, 'name': tag_name})
 
 
 def setup(bot: HemuBot):
