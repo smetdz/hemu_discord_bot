@@ -10,6 +10,7 @@ from umongo import fields
 from bot import HemuBot
 from cogs.utils.poll import Poll
 from cogs.utils.base import TagsListView
+from cogs.utils.checks import role_mentions_check
 from cogs.utils import errors
 from cogs.utils.utils import get_member, get_role, get_delay, get_utc_datetime
 from config import hemu_emoji, poll_options_emoji, base_poll_duration
@@ -338,6 +339,7 @@ class Tools(commands.Cog):
         count = await Tag.count_documents(f_dict)
         return await tags_.to_list(count)
 
+    @commands.check(role_mentions_check)
     @tag.command(name='create', aliases=('создать', 'add',))
     async def create_tag(self, ctx: commands.Context, tag_name: str, *, tag_text: str):
         try:
