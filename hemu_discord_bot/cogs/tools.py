@@ -289,6 +289,7 @@ class Tools(commands.Cog):
             duration = d_poll.duration - int((datetime.datetime.now() - message.created_at).total_seconds())
             self.bot.loop.create_task(self.process_poll(poll, duration, new_poll=False))
 
+    @commands.check(role_mentions_check)
     @commands.group(name='tag', aliases=('тег', ))
     async def tag(self, ctx: commands.Context):
         params = ctx.message.content.split()
@@ -300,6 +301,7 @@ class Tools(commands.Cog):
         else:
             await self.return_tag(ctx, ctx.guild.id, ' '.join(params[1:]))
 
+    @commands.check(role_mentions_check)
     @tag.command(name='show')
     async def show(self, ctx: commands.Context, *, tag_name: str):
         await self.return_tag(ctx, ctx.guild.id, tag_name)
@@ -355,6 +357,7 @@ class Tools(commands.Cog):
 
         await ctx.send(f'Тег успешно создан {hemu_emoji["hemu_fun"]}')
 
+    @commands.check(role_mentions_check)
     @tag.command(name='remove', aliases=('delete', 'удалить',))
     async def remove_tag(self, ctx: commands.Context, *, tag_name: str):
         tag = await self.find_tag(ctx.guild.id, tag_name)
@@ -370,6 +373,7 @@ class Tools(commands.Cog):
         tag_list = await self.search_tag(ctx.guild.id, tag_name)
         await self.return_tag_list(ctx, tag_name, tag_list)
 
+    @commands.check(role_mentions_check)
     @tag.command(name='edit', aliases=('изменить',))
     async def edit_tag(self, ctx: commands.Context, tag_name, *, new_tag_text: str):
         tag = await self.find_tag(ctx.guild.id, tag_name)
@@ -386,6 +390,7 @@ class Tools(commands.Cog):
         tag_list = await self.search_tag(ctx.guild.id, tag_name)
         await self.return_tag_list(ctx, tag_name, tag_list)
 
+    @commands.check(role_mentions_check)
     @tag.command(name='list', aliases=('lst', 'список',))
     async def show_tags(self, ctx: commands.Context, page: int = 1, *, user: str = None):
         if user:
