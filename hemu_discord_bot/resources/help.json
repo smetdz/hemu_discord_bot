@@ -177,11 +177,18 @@
       },
       {
         "name": "tag",
-        "aliases": [],
-        "description": "Вызывайте с подкомандами 'add', 'remove', 'list', 'show', 'edit', 'all'.\n Используйте !help tag [имя подкоманды]",
-        "usage": "!tag [sub command] [args]",
-        "example": "!tag list",
+        "aliases": ["тег"],
+        "description": "Показать содержимое тега.\nВызывайте с подкомандами 'add', 'remove', 'list', 'edit'.\n Используйте !help tag [имя подкоманды]",
+        "usage": "!tag [tag_name]",
+        "example": "!tag название",
         "sub_commands": [
+          {
+            "name": "show",
+            "aliases": [],
+            "description": "Показывает содержимое указанного тега.",
+            "usage": "!tag show [tag_name]",
+            "example": "!tag show tag name"
+          },
           {
             "name": "create",
             "aliases": ["создать", "add"],
@@ -191,10 +198,10 @@
           },
           {
             "name": "remove",
-            "aliases": ["del", "delete", "dlt", "удалить"],
+            "aliases": ["delete", "удалить"],
             "description": "Удаляет тег.",
             "usage": "!tag remove [tag_name]",
-            "example": "!tag remove tagname"
+            "example": "!tag remove tag name"
           },
           {
             "name": "edit",
@@ -206,30 +213,9 @@
           {
             "name": "list",
             "aliases": ["lst", "список"],
-            "description": "Показывает теги созданные вами или указанным пользователем.",
-            "usage": "!tag list [user]",
-            "example": "!tag list username"
-          },
-          {
-            "name": "show",
-            "aliases": [],
-            "description": "Показывет содержимое тега.",
-            "usage": "!tag show [tag_name]",
-            "example": "!tag show tagname"
-          },
-          {
-            "name": "usertag",
-            "aliases": [],
-            "description": "Показывет содержимое тега созданного указанным пользователем.",
-            "usage": "!tag usertag [username] [tag_name]",
-            "example": "!tag usertag \"user name\" tag name"
-          },
-          {
-            "name": "all",
-            "aliases": [],
-            "description": "Показывет все теги на сервере.",
-            "usage": "!tag all",
-            "example": "!tag all"
+            "description": "Показывает теги на сервере или пользователя, если тот был указан.",
+            "usage": "!tag list [page] [user]",
+            "example": "!tag list"
           }
         ]
       },

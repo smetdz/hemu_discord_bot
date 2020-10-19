@@ -288,16 +288,20 @@ class Tools(commands.Cog):
             duration = d_poll.duration - int((datetime.datetime.now() - message.created_at).total_seconds())
             self.bot.loop.create_task(self.process_poll(poll, duration, new_poll=False))
 
-    @commands.group(name='tag')
+    @commands.group(name='tag', aliases=('тег', ))
     async def tag(self, ctx: commands.Context):
         params = ctx.message.content.split()
         sub_commands = ['create', 'создать', 'add', 'list', 'список', 'lst',
-                        'edit', 'изменить', 'delete', 'del', 'dlt', 'удалить']
+                        'edit', 'изменить', 'delete', 'remove', 'удалить', 'show']
 
         if params[1] in sub_commands:
             pass
         else:
             await self.return_tag(ctx, ctx.guild.id, ' '.join(params[1:]))
+
+    @tag.command(name='show')
+    async def show(self, ctx: commands.Context, *, tag_name: str):
+        await self.return_tag(ctx, ctx.guild.id, tag_name)
 
     async def return_tag(self, ctx: commands.Context, guild_id: int, tag_name: str):
         tag = await self.find_tag(guild_id, tag_name)
@@ -349,8 +353,8 @@ class Tools(commands.Cog):
 
         await ctx.send(f'Тег успешно создан {hemu_emoji["hemu_fun"]}')
 
-    @tag.command(name='remove', aliases=('delete', 'del', 'dlt', 'удалить',))
-    async def remove_tag(self, ctx: commands.Context, tag_name: str):
+    @tag.command(name='remove', aliases=('delete', 'удалить',))
+    async def remove_tag(self, ctx: commands.Context, *, tag_name: str):
         tag = await self.find_tag(ctx.guild.id, tag_name)
 
         if tag:
