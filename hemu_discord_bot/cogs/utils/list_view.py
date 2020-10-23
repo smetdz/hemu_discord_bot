@@ -1,10 +1,12 @@
 import discord
+from discord.ext import commands
 
 
 class ListView:
     emojis = ['⬅', '➡', '❌']
 
-    def __init__(self, title: str, count_on_page: int, page: int, count: int, search_d: dict, doc):
+    def __init__(self, title: str, count_on_page: int, page: int, count: int, search_d: dict, doc,
+                 author: discord.Member = None, bot: commands.Bot = None):
         self.title = title
         self.per_page = count_on_page
         self.count = count
@@ -12,6 +14,8 @@ class ListView:
         self.search_d = search_d
         self.doc = doc
         self.current_page = page if page <= self.pages_count else 1
+        self.author = author
+        self.bot = bot
 
         self.message = None
 
@@ -54,6 +58,9 @@ class ListView:
         embed = self.create_view_embed(elements)
         await self.message.edit(embed=embed)
 
+    def calc_elem_pos(self, ind: int) -> int:
+        return ind + (self.current_page - 1) * self.per_page
+
     def create_view_embed(self, c_lst: list) -> discord.Embed:
         pass
 
@@ -61,7 +68,19 @@ class ListView:
 class TagsListView(ListView):
     def create_view_embed(self, tags: list) -> discord.Embed:
         tags_emb = discord.Embed(title=self.title, colour=discord.Colour.dark_purple(),
-                                 description='\n'.join([f'**{ind + 1 + (self.current_page - 1) * self.per_page}.** '
-                                                        f'{tag.name}' for ind, tag in enumerate(tags)]))
+                                 description='\n'.join([f'**{self.calc_elem_pos(i + 1)}.** '
+                                                        f'{tag.name}' for i, tag in enumerate(tags)]))
         tags_emb.set_footer(text=f'Страница {self.current_page}/{self.pages_count}')
         return tags_emb
+
+
+class ReactionsListView(ListView):
+    def create_view_embed(self, reactions: list) -> discord.Embed:
+        reactions_dsr = '\n'.join([f'**{self.calc_elem_pos(i + 1)}.** {reaction.string} : {reaction.reaction}'
+                                   for i, reaction in enumerate(reactions)])
+        emb = discord.Embed(title=f'Реакции на сервере {self.title}', colour=discord.Colour.dark_purple(),
+                            description=reactions_dsr)
+        emb.set_author(icon_url=self.bot.user.avatar_url, name='Hemu')
+        emb.set_footer(text=f'Запрошено {self.author.name}')
+
+        return emb

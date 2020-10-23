@@ -1,11 +1,13 @@
+import asyncio
+
 import discord
 from discord.ext import commands
-
 from umongo import fields
 
 from bot import HemuBot
 from config import hemu_emoji
 from mongo_documents import Guild, Reaction
+from cogs.utils.list_view import ReactionsListView
 
 
 class ReactionCog(commands.Cog):
@@ -64,23 +66,28 @@ class ReactionCog(commands.Cog):
         await ctx.send(f'Нету реакции на "{string}".')
 
     @reaction.command(name='list', aliases=['lst', 'show'])
-    async def reaction_list(self, ctx: commands.Context):
-        reactions_ = Reaction.find({'guild': ctx.guild.id})
-        count = await Reaction.count_documents({'guild': ctx.guild.id})
-        reactions = await reactions_.to_list(count)
-        print(reactions)
+    async def reaction_list(self, ctx: commands.Context, page: str = '1'):
+        search_d = {'guild': ctx.guild.id}
+        reactions_count = await Reaction.count_documents({'guild': ctx.guild.id})
 
-        if reactions:
-            reactions_dsr = '\n'.join([f'{reaction.string} : {reaction.reaction}' for reaction in reactions])
-            emb = discord.Embed(title=f'Реакции на сервере {ctx.guild.name}', colour=discord.Colour.dark_purple(),
-                                description=reactions_dsr)
-            emb.set_author(icon_url=self.bot.user.avatar_url, name='Hemu')
-            emb.set_footer(text=f'Запрошено {ctx.author.name}')
-
-            await ctx.send(embed=emb)
+        if not reactions_count:
+            await ctx.send('На сервере отсутствуют реакции.')
             return
 
-        await ctx.send('На сервере отсутствуют реакции.')
+        try:
+            page = int(page)
+        except ValueError:
+            page = 1
+
+        title = f'Реакции на сервере {ctx.guild.name}'
+        list_view = ReactionsListView(title, 15, page, reactions_count, search_d, Reaction, ctx.author, self.bot)
+
+        message_id = await list_view.show(ctx.channel)
+        self.bot.list_views[message_id] = list_view
+
+        await asyncio.sleep(120)
+
+        self.bot.list_views.pop(message_id)
 
     @reaction.command(name='switch', aliases=['swh'])
     @commands.has_permissions(administrator=True)

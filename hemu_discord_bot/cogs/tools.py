@@ -9,7 +9,7 @@ from umongo import fields
 
 from bot import HemuBot
 from cogs.utils.poll import Poll
-from cogs.utils.base import TagsListView
+from cogs.utils.list_view import TagsListView
 from cogs.utils.checks import role_mentions_check
 from cogs.utils import errors
 from cogs.utils.utils import get_member, get_role, get_delay, get_utc_datetime
