@@ -392,7 +392,13 @@ class Tools(commands.Cog):
 
     @commands.check(role_mentions_check)
     @tag.command(name='list', aliases=('lst', 'список',))
-    async def show_tags(self, ctx: commands.Context, page: int = 1, *, user: str = None):
+    async def show_tags(self, ctx: commands.Context, page: str = '1', *, user: str = None):
+        try:
+            page = int(page)
+        except ValueError:
+            user = page + user if user else page
+            page = 1
+
         if user:
             try:
                 member = get_member(ctx, user)
