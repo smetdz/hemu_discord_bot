@@ -81,6 +81,6 @@ class ReactionsListView(ListView):
         emb = discord.Embed(title=f'Реакции на сервере {self.title}', colour=discord.Colour.dark_purple(),
                             description=reactions_dsr)
         emb.set_author(icon_url=self.bot.user.avatar_url, name='Hemu')
-        emb.set_footer(text=f'Запрошено {self.author.name}')
+        emb.set_footer(text=f'Страница {self.current_page}/{self.pages_count} | Запрошено {self.author.name}')
 
         return emb
