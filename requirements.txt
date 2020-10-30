@@ -1,5 +1,5 @@
 discord
-discord.py
+discord.py==1.5.1
 umongo
 motor
 dnspython
