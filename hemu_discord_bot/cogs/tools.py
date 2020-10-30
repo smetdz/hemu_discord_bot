@@ -363,7 +363,7 @@ class Tools(commands.Cog):
         tag = await self.find_tag(ctx.guild.id, tag_name)
 
         if tag:
-            if tag.user_id != ctx.author.id or ctx.author.guild_permissions.manage_messages:
+            if tag.user_id == ctx.author.id or ctx.author.guild_permissions.manage_messages:
                 await tag.remove()
                 await ctx.send(f'Тег "{tag_name}" удален')
                 return
@@ -379,7 +379,7 @@ class Tools(commands.Cog):
         tag = await self.find_tag(ctx.guild.id, tag_name)
 
         if tag:
-            if tag.user_id != ctx.author.id or ctx.author.guild_permissions.manage_messages:
+            if tag.user_id == ctx.author.id or ctx.author.guild_permissions.manage_messages:
                 tag.text = new_tag_text
                 await tag.commit()
                 await ctx.send(f'Содержимое тега "{tag_name}" изменено.')
