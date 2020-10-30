@@ -55,7 +55,10 @@ class HemuBot(commands.Bot):
 
 
 if __name__ == '__main__':
-    hemu = HemuBot(command_prefix="!", case_insensitive=True)
+    intents = discord.Intents.default()
+    intents.members = True
+
+    hemu = HemuBot(command_prefix="!", case_insensitive=True, intents=intents)
     hemu.remove_command('help')
 
     db = AsyncIOMotorClient(os.environ['MONGO_CLIENT'])['discord-hemu-bot']
