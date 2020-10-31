@@ -396,7 +396,7 @@ class Tools(commands.Cog):
         try:
             page = int(page)
         except ValueError:
-            user = page + user if user else page
+            user = page + ' ' + user if user else page
             page = 1
 
         if user:
