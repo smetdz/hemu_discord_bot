@@ -1,4 +1,5 @@
 import asyncio
+from copy import deepcopy
 from datetime import datetime
 
 import discord
@@ -51,7 +52,9 @@ class YouTubeNotifier:
 
     @tasks.loop(seconds=300)
     async def get_last_video_ntf(self):
-        for channel_title, c_channel in self.channels_dict.items():
+        c_dict = deepcopy(self.channels_dict)
+        
+        for channel_title, c_channel in c_dict.items():
             c_video_count = await self.youtube.get_channel_video_count(c_channel.id)
 
             print(channel_title, c_video_count)
@@ -72,7 +75,7 @@ class YouTubeNotifier:
                 self.bot.loop.create_task(self.update_channel_last_video(channel_title, last_video, c_video_count))
 
     async def process_video_count_change(self, channel: YouTubeChannel, new_video_count: int):
-        for _ in range(3):
+        for _ in range(8):
             await asyncio.sleep(3600)
             last_video = await self.youtube.get_last_channel_video(channel.id)
             if last_video.id != channel.last_video_id:
