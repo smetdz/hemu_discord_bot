@@ -69,7 +69,7 @@ class YouTubeNotifier:
 
                 delay_s = (datetime.now() - last_video.published_at).total_seconds()
 
-                if c_channel.last_video_id != last_video.id and delay_s < 2400:
+                if c_channel.last_video_id != last_video.id and delay_s < 14400:
                     self.bot.loop.create_task(self.notify_about_new_video(channel_title, c_channel.guilds, last_video))
 
                 self.bot.loop.create_task(self.update_channel_last_video(channel_title, last_video, c_video_count))
