@@ -1,6 +1,6 @@
 discord
 discord.py==1.5.1
-umongo
+umongo==2.3.0
 motor
 dnspython
 pytz
