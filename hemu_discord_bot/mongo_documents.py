@@ -1,4 +1,4 @@
-from umongo.frameworks import MotorAsyncIOInstance
+from umongo import MotorAsyncIOInstance
 from umongo import Document, fields
 
 
