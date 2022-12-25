@@ -1,8 +1,12 @@
-from umongo import MotorAsyncIOInstance
+import os
+
+from umongo.frameworks import MotorAsyncIOInstance
+from motor.motor_asyncio import AsyncIOMotorClient
 from umongo import Document, fields
 
 
-instance = MotorAsyncIOInstance()
+db = AsyncIOMotorClient(os.environ['MONGO_CLIENT'])['discord-hemu-bot']
+instance = MotorAsyncIOInstance(db)
 
 
 @instance.register

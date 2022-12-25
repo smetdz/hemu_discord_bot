@@ -5,9 +5,8 @@ from collections import namedtuple
 import discord
 from discord.ext import commands
 from umongo import fields
-from motor.motor_asyncio import AsyncIOMotorClient
 
-from mongo_documents import instance, Guild, Reaction
+from mongo_documents import db, Guild, Reaction
 from twitch_notifier import TwitchNotifier
 
 
@@ -60,9 +59,6 @@ if __name__ == '__main__':
 
     hemu = HemuBot(command_prefix="!", case_insensitive=True, intents=intents)
     hemu.remove_command('help')
-
-    db = AsyncIOMotorClient(os.environ['MONGO_CLIENT'])['discord-hemu-bot']
-    instance.init(db)
 
     hemu.db = db
     hemu.loop.create_task(hemu.load_reactions())
